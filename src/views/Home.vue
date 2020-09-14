@@ -19,7 +19,9 @@
 
 			<div class="  flex items-center w-auto mt-2 lg:mt-0 bg-grey-lightest md:bg-transparent z-20" id="nav-content">
 				<div class="  lg:flex justify-end flex-1 items-center">
-					<MetamaskDropdown />
+					<MetamaskDropdown
+            :acctAddress= "activeAccountAddress"
+          />
 				</div>
 			</div>
 		</div>
@@ -51,16 +53,53 @@
 
 <script>
 import MetamaskDropdown from './MetamaskDropdown.vue'
+import Web3Helper from '../web3-helper.js'
 
 export default {
   name: 'Home',
   components: {
      MetamaskDropdown
   },
-  data() {
+  data () {
     return {
-      open: false
+      activeAccountAddress: null
     }
   },
+  created () {
+
+    this.checkSignedIn()
+
+
+    Web3Helper.init();
+
+    this.readWeb3Data();
+
+  },
+  methods: {
+   async checkSignedIn () {
+      if (typeof window.ethereum == 'undefined') {
+          this.$router.replace('/login');
+          return;
+      }
+
+      await window.ethereum
+
+      var connected = await window.ethereum.isConnected()
+      console.log("connected? ",connected)
+      if(!connected)
+      {
+         this.$router.replace('/login');
+         return;
+      }
+    },
+   async readWeb3Data () {
+     var accounts = await Web3Helper.getConnectedAccounts();
+
+     this.activeAccountAddress = accounts[0]
+   }
+
+
+  }
+
 }
 </script>

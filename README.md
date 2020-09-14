@@ -1,16 +1,12 @@
-# Vue + Tailwind Interactive Component Examples
+# 0xBTC Matic Wallet
 
-A small collection of interactive Vue + Tailwind examples, written from scratch.
+### Still in active development!  Please contribute with pull requests.
 
-[See the examples live on Netlify &rarr;](https://vue-tailwind-examples.netlify.com/)
+A web3 wallet for 0xBTC that works with the Matic and Ethereum networks.
+
+
 
 ## Project setup
-```
-yarn install
-yarn run serve
-```
-
-Or
 
 ```
 npm install

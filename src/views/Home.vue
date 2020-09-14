@@ -5,16 +5,13 @@
 
 	<div id="progress" class="h-1 z-20 pin-t" style="background:linear-gradient(to right, #4dc0b5 var(--scroll), transparent 0);"></div>
 
-		<div class="w-full mx-auto flex flex-wrap items-center justify-between mt-0 py-3 bg-white">
+		<div class="w-full mx-auto flex flex-wrap items-center justify-between mt-0 py-3 bg-white px-4">
 
 			<div class="pl-4">
 				<a class="text-black text-base no-underline hover:no-underline font-extrabold text-xl"  href="#">
 					0xBTC Matic Wallet
 				</a>
-            </div>
-
-
-
+      </div>
 
 
 			<div class="  flex items-center w-auto mt-2 lg:mt-0 bg-grey-lightest md:bg-transparent z-20" id="nav-content">
@@ -32,15 +29,28 @@
   <div class="flex mb-4">
     <div class="w-1/3 bg-gray-300 overflow-y-scroll ">
       <div class="m-6 p-4 bg-gray-100">
-        <h1 class="text-6xl font-bold">Vue + Tailwind</h1>
-        <p class="text-xl text-gray-600 tracking-wider uppercase font-bold">Interactive component examples</p>
+        <h3 class="text-lg font-bold">Wallet Balance</h3>
+
+				<div>
+				</div>
+
+				<div>
+					<button>
+						Deposit
+					</button>
+
+					<button>
+						Withdraw
+					</button>
+				</div>
+
       </div>
     </div>
     <div class="w-2/3 bg-gray-300  ">
       <div class="m-6 p-4 bg-gray-100">
-        <h1 class="text-6xl font-bold">Vue + Tailwind</h1>
-        <p class="text-xl text-gray-600 tracking-wider uppercase font-bold">Interactive component examples</p>
-      </div>
+				<h3 class="text-lg font-bold">Your Tokens</h3>
+				<p class="text-md text-gray-600 tracking-wider uppercase font-bold">Interactive component examples</p>
+    </div>
     </div>
   </div>
 
@@ -53,7 +63,7 @@
 
 <script>
 import MetamaskDropdown from './MetamaskDropdown.vue'
-import Web3Helper from '../web3-helper.js'
+import Web3Helper from '../js/web3-helper.js'
 
 export default {
   name: 'Home',

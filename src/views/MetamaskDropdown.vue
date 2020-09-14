@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import Web3Helper from '../web3-helper.js'
+import Web3Helper from '../js/web3-helper.js'
 
 export default {
   name: 'MetamaskDropdown',

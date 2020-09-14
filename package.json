@@ -1,5 +1,6 @@
 {
-  "name": "vue-playground",
+  "name": "matic-0xbtc-wallet",
+  "description": "Web wallet for 0xBTC for the Ethereum and Matic Networks",
   "version": "0.1.0",
   "private": true,
   "scripts": {

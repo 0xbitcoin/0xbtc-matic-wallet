@@ -26,12 +26,25 @@
 	</nav>
 
 
-  <div class="flex justify-center items-center">
-    <div class="text-center">
-      <h1 class="text-6xl font-bold">Vue + Tailwind</h1>
-      <p class="text-xl text-gray-600 tracking-wider uppercase font-bold">Interactive component examples</p>
+
+  <div class="flex mb-4">
+    <div class="w-1/3 bg-gray-300 overflow-y-scroll ">
+      <div class="m-6 p-4 bg-gray-100">
+        <h1 class="text-6xl font-bold">Vue + Tailwind</h1>
+        <p class="text-xl text-gray-600 tracking-wider uppercase font-bold">Interactive component examples</p>
+      </div>
+    </div>
+    <div class="w-2/3 bg-gray-300  ">
+      <div class="m-6 p-4 bg-gray-100">
+        <h1 class="text-6xl font-bold">Vue + Tailwind</h1>
+        <p class="text-xl text-gray-600 tracking-wider uppercase font-bold">Interactive component examples</p>
+      </div>
     </div>
   </div>
+
+
+
+
 </div>
 </template>
 

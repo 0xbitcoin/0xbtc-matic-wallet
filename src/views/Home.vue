@@ -31,15 +31,16 @@
       <div class="m-6 p-4 bg-gray-100">
         <h3 class="text-lg font-bold">Wallet Balance</h3>
 
-				<div>
+				<div class="p-12 text-xl w-full text-center">
+					0
 				</div>
 
 				<div>
-					<button>
+					<button class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
 						Deposit
 					</button>
-
-					<button>
+					<br>
+					<button class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
 						Withdraw
 					</button>
 				</div>
@@ -49,8 +50,20 @@
     <div class="w-2/3 bg-gray-300  ">
       <div class="m-6 p-4 bg-gray-100">
 				<h3 class="text-lg font-bold">Your Tokens</h3>
-				<p class="text-md text-gray-600 tracking-wider uppercase font-bold">Interactive component examples</p>
-    </div>
+
+
+				<div class="container mt-8">
+
+					<div class="flex width-full bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ">
+						<div class="text-md w-1/2"> 0xBTC </div>
+						<div class="text-md w-1/2 text-right"> 0.0 </div>
+
+
+					</div>
+
+				</div>
+
+	  </div>
     </div>
   </div>
 

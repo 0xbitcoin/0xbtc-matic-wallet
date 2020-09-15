@@ -2,6 +2,8 @@
 
 //https://docs.metamask.io/guide/ethereum-provider.html#using-the-provider
 const tokenContractABI = require('../contracts/ERC20ABI.json')
+const config = require('./config-0xbtc.js')
+
 
 var helper = {
 
@@ -24,16 +26,32 @@ var helper = {
     }
   },
 
+  ethereumChainID()
+  {
+    return 0x1
+  },
+  maticChainID()
+  {
+    return 0x89
+  },
+
   async getConnectedAccounts()
   {
     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
     return accounts;
   },
 
+  async getProviderNetworkID()
+  {
+    var net_id = await  window.ethereum.chainId;
+    console.log('net id is', net_id)
+    return net_id;
+  },
+
   async getTokensAllowance(tokenAddress, spender, ownerAddress)
   {
     var Web3 = require('web3');
-    var web3 = new Web3(Web3.givenProvider || 'ws://localhost:8546');
+    var web3 = new Web3(config.root.RPC);
 
 
     var tokenContract = new web3.eth.Contract(tokenContractABI, tokenAddress, {});
@@ -47,7 +65,7 @@ var helper = {
   async getTokensBalance(tokenAddress, ownerAddress)
   {
     var Web3 = require('web3');
-    var web3 = new Web3(Web3.givenProvider || 'ws://localhost:8546');
+    var web3 = new Web3(config.root.RPC);
 
 
     var tokenContract = new web3.eth.Contract(tokenContractABI, tokenAddress, {});

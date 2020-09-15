@@ -34,6 +34,7 @@
 				<TransactionForm
 				:acctAddress= "activeAccountAddress"
 				:activeNetwork= "network"
+				:providerNetworkID= "providerNetworkID"
 				:assetName= "assetName"
 				/>
 
@@ -92,6 +93,7 @@ export default {
     return {
       activeAccountAddress: null,
 			network: 'ethereum',
+			providerNetworkID: null,
 			assetName: '0xBTC',
 			assetBalances: {"0xBTC": 0}
     }
@@ -128,6 +130,8 @@ export default {
     },
    async readWeb3Data () {
      var accounts = await Web3Helper.getConnectedAccounts();
+
+		 this.providerNetworkID = await Web3Helper.getProviderNetworkID();
 
      this.activeAccountAddress = accounts[0]
 

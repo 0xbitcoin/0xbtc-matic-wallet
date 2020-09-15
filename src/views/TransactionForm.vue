@@ -9,7 +9,7 @@
 
       <div>
 
-        <div class="p-6 bg-gray-500 w-full text-sm">
+        <div v-if="!networkProviderIdError" class="p-6 bg-gray-500 w-full text-sm">
           <input v-on:keyup="updateFormMode" type="text" v-model="swapAmount" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline inline-block mr-4" size="8"/>
 
           <button v-if="formMode=='none'"  class="bg-white text-sm text-gray-200 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded inline-block">
@@ -23,6 +23,21 @@
           <button v-if="formMode=='swap'" @click="swap" class="bg-white  text-sm hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded inline-block">
             Swap To {{otherNetworkName()}}
           </button>
+
+          <div class="m-4">
+            <div v-if="txError">{{txError}}</div>
+
+          </div>
+
+
+          <div v-if="activeNetwork=='matic'" class="mt-12">
+            <p>  Manually Add Burn TX Hash (Advanced) </p>
+            <input v-on:keyup="updateFormMode" type="text" v-model="burnTXHash" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline inline-block mr-4" size="8"/>
+
+          </div>
+        </div>
+        <div v-if="networkProviderIdError">
+          {{networkProviderIdError}}
         </div>
 
 
@@ -40,13 +55,15 @@ import CryptoAssets from '../js/cryptoassets.js'
 
 export default {
   name: 'TransactionForm',
-  props: ['activeNetwork','acctAddress','assetName'],
+  props: ['activeNetwork','acctAddress','assetName','providerNetworkID'],
   data() {
     return {
       swapAmount: 0,
       formMode: "none",
       currentBalance: '0.0',
-      burnTXHash: null
+      burnTXHash: null,
+      txError: null,
+      networkProviderIdError: null
     }
   },
   mounted()
@@ -65,6 +82,29 @@ export default {
     otherNetworkName(){
       if(this.activeNetwork == "matic"){ return "Ethereum" }else{ return "Matic" }
     },
+    checkNetworkProviderIdValid(){
+
+      if(this.activeNetwork == "ethereum")
+      {
+        if(this.providerNetworkID != Web3Helper.ethereumChainID())
+        {
+          this.networkProviderIdError = "Please switch your Web3 Provider to Ethereum Mainnet to call these methods."
+          return false
+        }
+      }
+
+      if(this.activeNetwork == "matic")
+      {
+        if(this.providerNetworkID != Web3Helper.maticChainID())
+        {
+          this.networkProviderIdError = "Please switch your Web3 Provider to Matic Mainnet (Chain ID: 137) to call these methods."
+          return false
+        }
+      }
+
+      this.networkProviderIdError = null;
+      return true;
+    },
     async updateBalance()
     {
       if(this.activeNetwork == "ethereum"){
@@ -73,6 +113,8 @@ export default {
            this.acctAddress
          )
         this.currentBalance =  Web3Helper.rawAmountToFormatted(balanceRaw, CryptoAssets.assets[this.assetName]['Decimals']);
+
+        this.burnTXHash = null;
       }
       if(this.activeNetwork == "matic"){
         var web3provider = new Web3(Web3.givenProvider || 'ws://localhost:8546');
@@ -117,9 +159,16 @@ export default {
         }
 
         if(this.activeNetwork == "matic"){
-          this.formMode= "approve"
+
+          if(typeof this.burnTXHash == "undefined"){
+            this.formMode= "approve"
+          }else{
+            this.formMode= "swap"
+          }
+
         }
 
+        this.checkNetworkProviderIdValid()
 
 
 
@@ -161,7 +210,9 @@ export default {
         )
         console.log(result)
 
+        var txHash = result.transactionHash;
 
+        this.burnTXHash = txhash;
 
       }
 
@@ -197,12 +248,20 @@ export default {
           var web3provider = new Web3(Web3.givenProvider || 'ws://localhost:8546');
           var userAddress = this.acctAddress;
 
-          var maticClient = MaticHelper.getMaticPOSClient(web3provider,userAddress);
+          var maticClient = MaticHelper.getMaticPOSConnection(web3provider,userAddress);
 
           var result = await maticClient.exitERC20(
             this.burnTXHash,
             {from: userAddress}
           )
+
+          console.log(result)
+          console.log(result.message)
+
+          this.txError = result.message ;
+
+
+          this.burnTXHash = null;
 
 
 

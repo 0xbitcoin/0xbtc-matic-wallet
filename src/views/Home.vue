@@ -18,6 +18,7 @@
 				<div class="  lg:flex justify-end flex-1 items-center">
 					<MetamaskDropdown
             :acctAddress= "activeAccountAddress"
+						:providerNetworkID= "providerNetworkID"
           />
 				</div>
 			</div>

@@ -9,34 +9,65 @@
 
       <div>
 
-        <div v-if="!networkProviderIdError" class="p-6 bg-gray-500 w-full text-sm">
-          <input v-on:keyup="updateFormMode" type="text" v-model="swapAmount" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline inline-block mr-4" size="8"/>
+        <div class="p-6 bg-gray-500 w-full text-sm">
 
           <button v-if="formMode=='none'"  class="bg-white text-sm text-gray-200 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded inline-block">
+            <input v-on:keyup="updateFormMode" type="text" v-model="swapAmount" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline inline-block mr-4" size="8"/>
+
             Swap To {{otherNetworkName()}}
-          </button>
-          
-          <button v-if="formMode=='approve'" @click="approve" class="bg-white text-sm hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded inline-block ">
-            Approve
           </button>
 
-          <button v-if="formMode=='swap'" @click="swap" class="bg-white  text-sm hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded inline-block">
-            Swap To {{otherNetworkName()}}
-          </button>
+          <div v-if="formMode=='approve'">
+            <input v-on:keyup="updateFormMode" type="text" v-model="swapAmount" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline inline-block mr-4" size="8"/>
+
+            <button v-if="formMode=='approve'" @click="approve" class="bg-white text-sm hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded inline-block ">
+              Approve
+            </button>
+          </div>
+
+          <div v-if="formMode=='swapin'">
+            <input v-on:keyup="updateFormMode" type="text" v-model="swapAmount" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline inline-block mr-4" size="8"/>
+
+            <button @click="swapin" class="bg-white  text-sm hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded inline-block">
+              Swap To {{otherNetworkName()}}
+            </button>
+          </div>
+
+
+
+          <div v-if="formMode=='swapout'">
+            <input v-on:keyup="updateFormMode" type="text" v-model="swapAmount" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline inline-block mr-4" size="8"/>
+
+            <button @click="startexit" class="bg-white text-sm hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded inline-block ">
+              Start Exit
+            </button>
+          </div>
+
+          <br>
+
+          <div v-if="formMode=='swapout'">
+
+            <p>  Startexit TX Hash  </p>
+            <input v-on:keyup="updateFormMode" type="text" placeholder="0x2134..." v-model="burnTXHash" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline inline-block mr-4" size="8"/>
+
+            <button v-if="!loading" @click="swapout" class="bg-white  text-sm hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded inline-block">
+              Swap To {{otherNetworkName()}}
+            </button>
+
+            <div class="inline-block">
+              <div v-if="loading" class="loader "></div>
+            </div>
+          </div>
+
 
           <div class="m-4">
             <div v-if="txError">{{txError}}</div>
 
           </div>
 
-
-          <div v-if="activeNetwork=='matic'" class="mt-12">
-            <p>  Manually Add Burn TX Hash (Advanced) </p>
-            <input v-on:keyup="updateFormMode" type="text" v-model="burnTXHash" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline inline-block mr-4" size="8"/>
-
-          </div>
         </div>
-        <div v-if="networkProviderIdError">
+
+        <div v-if="networkProviderIdError" class="p-8 bg-red-200">
           {{networkProviderIdError}}
         </div>
 
@@ -63,6 +94,7 @@ export default {
       currentBalance: '0.0',
       burnTXHash: null,
       txError: null,
+      loading: false,
       networkProviderIdError: null
     }
   },
@@ -76,6 +108,7 @@ export default {
   },
   updated()
   {
+    console.log('form updated')
     this.updateFormMode();
     this.updateBalance();
   },
@@ -94,25 +127,7 @@ export default {
         }
       }
 
-      /*if(this.activeNetwork == "matic" && this.formMode == "approve")
-      {
-        if(this.providerNetworkID != Web3Helper.maticChainID())
-        {
-          this.networkProviderIdError = "Please switch your Web3 Provider to Matic Mainnet (Chain ID: 137) to call these methods."
-          return false
-        }
-      }
-
-      if(this.activeNetwork == "matic" && this.formMode == "swap")
-      {
-        if(this.providerNetworkID != Web3Helper.maticChainID())
-        {
-          this.networkProviderIdError = "Please switch your Web3 Provider to Matic Mainnet (Chain ID: 137) to call these methods."
-          return false
-        }
-      }*/
-
-      this.networkProviderIdError = null;
+      //this.networkProviderIdError = null;
       return true;
     },
     async updateBalance()
@@ -146,13 +161,17 @@ export default {
     {
       console.log('updateFormMode');
 
-      if(this.swapAmount <= 0 )
-      {
-          this.formMode= "none"
-          return;
-      }
+
 
       if(this.activeNetwork == "ethereum"){
+
+
+        if(this.swapAmount <= 0 )
+        {
+            this.formMode= "none"
+            return;
+        }
+
 
           var numApproved = await Web3Helper.getTokensAllowance(CryptoAssets.assets[this.assetName]['EthereumContract'], this.acctAddress, CryptoAssets.assets[this.assetName]['EthereumPredicateContract'] )
 
@@ -164,22 +183,21 @@ export default {
           {
             this.formMode= "approve"
           }else{
-            this.formMode= "swap"
+            this.formMode= "swapin"
           }
         }
 
         if(this.activeNetwork == "matic"){
 
-          if(typeof this.burnTXHash == "undefined"){
-            this.formMode= "approve"
-          }else{
-            this.formMode= "swap"
-          }
+
+            this.formMode= "swapout"
+
 
         }
 
         this.checkNetworkProviderIdValid()
 
+        //this.networkProviderIdError = null;
 
 
     },
@@ -190,7 +208,9 @@ export default {
     async approve()
     {
 
-      if(this.activeNetwork == "ethereum"){
+      this.networkProviderIdError=null;
+
+      if(this.providerNetworkID == 0x1){
 
         var Web3 = require('web3');
         var web3provider = new Web3(Web3.givenProvider || 'ws://localhost:8546');
@@ -203,9 +223,22 @@ export default {
           Web3Helper.formattedAmountToRaw(this.swapAmount, CryptoAssets.assets[this.assetName]['Decimals']),
           {from: userAddress}
         )
+      }else{
+        this.networkProviderIdError = "Please switch your Web3 Provider to Ethereum Mainnet to call this method."
+
       }
 
-      if(this.activeNetwork == "matic"){
+
+
+
+
+    },
+    async startexit()
+    {
+
+          this.networkProviderIdError=null;
+
+        if(this.providerNetworkID == 0x89){
 
         var Web3 = require('web3');
         var web3provider = new Web3(Web3.givenProvider || 'ws://localhost:8546');
@@ -224,14 +257,18 @@ export default {
 
         this.burnTXHash = txhash;
 
+      }else{
+        this.networkProviderIdError = "Please switch your Web3 Provider to Matic Mainnet (chain id 137) to call this method."
+
       }
 
-
     },
-    async swap()
+    async swapin()
     {
 
-      if(this.activeNetwork == "ethereum"){
+        this.networkProviderIdError=null;
+
+      if(this.providerNetworkID == 0x1){
 
           var Web3 = require('web3');
           var web3provider = new Web3(Web3.givenProvider || 'ws://localhost:8546');
@@ -250,35 +287,47 @@ export default {
           )
 
           // get burn tx hash
-        }
-
-        if(this.activeNetwork == "matic"){
-
-          var Web3 = require('web3');
-          var web3provider = new Web3(Web3.givenProvider || 'ws://localhost:8546');
-          var userAddress = this.acctAddress;
-
-          var maticClient = MaticHelper.getMaticPOSClient(web3provider,userAddress);
-
-          var result = await maticClient.exitERC20(
-            this.burnTXHash,
-            {from: userAddress}
-          )
-
-          console.log(result)
-          console.log(result.message)
-
-          this.txError = result.message ;
-
-
-          this.burnTXHash = null;
-
-
+        }else{
+          this.networkProviderIdError = "Please switch your Web3 Provider to Ethereum Mainnet to call this method."
 
         }
 
 
 
+
+
+    },
+    async swapout()   //this is not working ?
+    {
+
+
+
+      this.networkProviderIdError=null;
+
+      if(this.providerNetworkID == 0x1){
+
+          this.loading = true;
+
+        var Web3 = require('web3');
+        var web3provider = new Web3(Web3.givenProvider || 'ws://localhost:8546');
+        var userAddress = this.acctAddress;
+
+        var maticClient = MaticHelper.getMaticPOSClient(web3provider,userAddress);
+
+        var result = await maticClient.exitERC20(this.burnTXHash)
+
+        this.loading=false;
+        console.log(result.transactionHash)
+
+
+        this.burnTXHash = null;
+
+
+
+      }else{
+        this.networkProviderIdError = "Please switch your Web3 Provider to Ethereum Mainnet to call this method."
+
+      }
     }
 
   }

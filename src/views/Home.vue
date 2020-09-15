@@ -57,10 +57,15 @@
 
 				<div class="container mt-8">
 
-					<a href="#" @click="selectAsset('0xBTC')" class="flex width-full bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ">
+					<a href="#" @click="selectAsset('0xBTC')" :class="assetName=='0xBTC' ? 'bg-blue-400 text-white' : 'bg-transparent text-blue-700'" class="flex width-full  hover:bg-blue-500  font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ">
 						<div class="text-md w-1/2"> 0xBTC </div>
-						<div class="text-md w-1/2 text-right"> {{ assetBalances["0xBTC"] }} </div>
+						<div class="text-md w-1/2 text-right">   </div>
 
+					</a>
+
+					<a href="#" @click="selectAsset('Matic')" :class="assetName=='Matic' ? 'bg-blue-400 text-white' : 'bg-transparent text-blue-700'" class="flex width-full  hover:bg-blue-500  font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ">
+						<div class="text-md w-1/2"> Matic </div>
+						<div class="text-md w-1/2 text-right">   </div>
 
 					</a>
 
@@ -94,8 +99,7 @@ export default {
       activeAccountAddress: null,
 			network: 'ethereum',
 			providerNetworkID: null,
-			assetName: '0xBTC',
-			assetBalances: {"0xBTC": 0}
+			assetName: '0xBTC'
     }
   },
   created () {
@@ -135,22 +139,22 @@ export default {
 
      this.activeAccountAddress = accounts[0]
 
-		 this.updateBalances()
+		 //this.updateBalances()
    },
 	 async setNetwork(networkName)
 	 {
 		 this.network = networkName;
 
-		 await this.updateBalances()
+		// await this.updateBalances()
 	 },
 	 async selectAsset(assetName)
 	 {
 		 this.assetName = assetName;
 
-		 await this.updateBalances()
+		// await this.updateBalances()
 	 },
 
-	 async updateBalances()
+	/* async updateBalances()
 	 {
 		   if(this.network == "ethereum"){
 				 var balanceRaw = await Web3Helper.getTokensBalance(CryptoAssets.assets["0xBTC"]['EthereumContract'], this.activeAccountAddress )
@@ -171,7 +175,7 @@ export default {
 				 this.assetBalances["0xBTC"] = Web3Helper.rawAmountToFormatted(balanceRaw, CryptoAssets.assets["0xBTC"]['Decimals']);
 
 			 }
-	 },
+	 },*/
 
 
   }

@@ -4,6 +4,7 @@ import Home from './views/Home.vue'
 import DropdownExample from './views/DropdownExample.vue'
 import ModalExample from './views/ModalExample.vue'
 import Login from './views/Login.vue'
+import Docs from './views/Docs.vue'
 
 Vue.use(Router)
 
@@ -22,9 +23,9 @@ export default new Router({
       component: Login,
     },
     {
-      path: '/modal',
-      name: 'modal',
-      component: ModalExample,
+      path: '/docs',
+      name: 'docs',
+      component: Docs,
     },
   ]
 })

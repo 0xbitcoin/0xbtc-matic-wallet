@@ -8,8 +8,11 @@ module.exports = {
       "EthereumPredicateContract": "0x40ec5b33f54e0e8a33a975908c5ba1c14e5bbbdf"
     },
     "Matic": {
+      "MaxSupply": 10000000000,
+      "Decimals": 18,
       "EthereumContract": "0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0",
-      "MaticContract": "0x0000000000000000000000000000000000001010"
+      "MaticContract": "0x0000000000000000000000000000000000001010",
+      "EthereumPredicateContract": "0x40ec5b33f54e0e8a33a975908c5ba1c14e5bbbdf"
     }
   }
 };

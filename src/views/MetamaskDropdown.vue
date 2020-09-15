@@ -17,14 +17,15 @@
         leave-class="opacity-100 scale-100"
         leave-to-class="opacity-0 scale-70"
       >
-        <div v-if="open" class="origin-top-right absolute right-0 mt-2 w-64 bg-white rounded-lg border shadow-md py-2">
+        <div v-if="open" class="origin-top-right absolute right-0 mt-2 w-256 bg-white rounded-lg border shadow-md py-2">
           <ul>
             <!-- <li>
               <a href="#" class="block px-4 py-2 hover:bg-indigo-500 hover:text-white">Profile</a>
-            </li>
-            <li>
-              <a href="#" class="block px-4 py-2 hover:bg-indigo-500 hover:text-white">Account settings</a>
             </li> -->
+            <li>
+              <span   id="myAddr" class="block px-4 py-2 hover:bg-indigo-500 hover:text-white">{{acctAddress}}</span>
+            </li>
+            <hr>
             <li>
               <a href="#" @click="disconnect" class="block px-4 py-2 hover:bg-indigo-500 hover:text-white">Sign out</a>
             </li>
@@ -46,6 +47,7 @@ export default {
     }
   },
   methods: {
+     
     disconnect () {
       Web3Helper.disconnect()
     }

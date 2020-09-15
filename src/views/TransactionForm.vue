@@ -71,12 +71,13 @@ export default {
 
     this.updateFormMode();
     this.updateBalance();
-    setInterval(this.updateFormMode, 2000);
-    setInterval(this.updateBalance, 2000);
+    setTimeout(this.updateFormMode, 2000);
+    setTimeout(this.updateBalance, 2000);
   },
   updated()
   {
-    //    this.updateBalance();
+    this.updateFormMode();
+    this.updateBalance();
   },
   methods: {
     otherNetworkName(){
@@ -144,7 +145,7 @@ export default {
 
       if(this.activeNetwork == "ethereum"){
 
-          var numApproved = await Web3Helper.getTokensAllowance(CryptoAssets.assets['0xBTC']['EthereumContract'], this.acctAddress, CryptoAssets.assets['0xBTC']['EthereumPredicateContract'] )
+          var numApproved = await Web3Helper.getTokensAllowance(CryptoAssets.assets[this.assetName]['EthereumContract'], this.acctAddress, CryptoAssets.assets[this.assetName]['EthereumPredicateContract'] )
 
           console.log('num Approved ', numApproved)
 
@@ -229,7 +230,7 @@ export default {
 
           var maticClient = MaticHelper.getMaticPOSClient(web3provider,userAddress);
 
-        //  console.log(CryptoAssets.assets['0xBTC']['EthereumContract'], this.swapAmount, userAddress );
+
 
 
           var result = await maticClient.depositERC20ForUser(

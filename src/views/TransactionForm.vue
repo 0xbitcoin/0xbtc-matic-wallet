@@ -4,7 +4,7 @@
       <h3 class="text-lg font-bold">Wallet Balance</h3>
 
       <div class="p-12 text-xl w-full text-center">
-        0
+        {{currentBalance}} {{assetName}}
       </div>
 
       <div>
@@ -13,15 +13,15 @@
           <input v-on:keyup="updateFormMode" type="text" v-model="swapAmount" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline inline-block mr-4" size="8"/>
 
           <button v-if="formMode=='none'"  class="bg-white text-sm text-gray-200 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded inline-block">
-            Swap {{assetName}} To {{otherNetworkName()}}
+            Swap To {{otherNetworkName()}}
           </button>
 
           <button v-if="formMode=='approve'" @click="approve" class="bg-white text-sm hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded inline-block ">
-            Approve {{assetName}} To {{otherNetworkName()}}
+            Approve
           </button>
 
           <button v-if="formMode=='swap'" @click="swap" class="bg-white  text-sm hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded inline-block">
-            Swap {{assetName}} To {{otherNetworkName()}}
+            Swap To {{otherNetworkName()}}
           </button>
         </div>
 
@@ -44,17 +44,25 @@ export default {
   data() {
     return {
       swapAmount: 0,
-      formMode: "none"
+      formMode: "none",
+      currentBalance: '0.0'
     }
   },
-  onCreated()
+  created()
   {
+    this.updateBalance();
     this.updateFormMode();
     setInterval(this.updateFormMode, 5000);
   },
   methods: {
     otherNetworkName(){
       if(this.activeNetwork == "matic"){ return "Ethereum" }else{ return "Matic" }
+    },
+    async updateBalance()
+    {
+      var balanceRaw = await Web3Helper.getTokensBalance(CryptoAssets.assets[this.assetName]['EthereumContract'], this.acctAddress )
+      this.currentBalance = balanceRaw / CryptoAssets.assets[this.assetName]['DecimalMultiplier'];
+      console.log('balance',balance)
     },
     async updateFormMode()
     {
@@ -99,7 +107,7 @@ export default {
 
       var result = await maticClient.approveERC20ForDeposit(
         CryptoAssets.assets['0xBTC']['EthereumContract'],
-        CryptoAssets.assets['0xBTC']['MaxSupply'] * CryptoAssets.assets['0xBTC']['DecimalMultiplier'],
+        this.swapAmount * CryptoAssets.assets['0xBTC']['DecimalMultiplier'],
         {from: userAddress}
       )
 

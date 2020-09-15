@@ -34,6 +34,7 @@
 				<TransactionForm
 				:acctAddress= "activeAccountAddress"
 				:activeNetwork= "network"
+				:assetName= "assetName"
 				/>
 
       </div>
@@ -88,7 +89,8 @@ export default {
   data () {
     return {
       activeAccountAddress: null,
-			network: 'ethereum'
+			network: 'ethereum',
+			assetName: '0xBTC'
     }
   },
   created () {

@@ -44,6 +44,20 @@ var helper = {
     return allowance;
   },
 
+  async getTokensBalance(tokenAddress, ownerAddress)
+  {
+    var Web3 = require('web3');
+    var web3 = new Web3(Web3.givenProvider || 'ws://localhost:8546');
+
+
+    var tokenContract = new web3.eth.Contract(tokenContractABI, tokenAddress, {});
+
+
+    var allowance = await tokenContract.methods.balanceOf(ownerAddress).call();
+
+    return allowance;
+  },
+
   async connect()
   {
     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });

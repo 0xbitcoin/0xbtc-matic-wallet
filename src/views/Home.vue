@@ -81,6 +81,7 @@ import MetamaskDropdown from './MetamaskDropdown.vue'
 import TransactionForm from './TransactionForm.vue'
 import Web3Helper from '../js/web3-helper.js'
 import CryptoAssets from '../js/cryptoassets.js'
+import MaticHelper from '../js/matic-helper.js'
 
 export default {
   name: 'Home',
@@ -132,22 +133,40 @@ export default {
 
 		 this.updateBalances()
    },
-	 setNetwork(networkName)
+	 async setNetwork(networkName)
 	 {
 		 this.network = networkName;
+
+		 await this.updateBalances()
 	 },
-	 selectAsset(assetName)
+	 async selectAsset(assetName)
 	 {
 		 this.assetName = assetName;
+
+		 await this.updateBalances()
 	 },
 
 	 async updateBalances()
 	 {
+		   if(this.network == "ethereum"){
+				 var balanceRaw = await Web3Helper.getTokensBalance(CryptoAssets.assets["0xBTC"]['EthereumContract'], this.activeAccountAddress )
+				 console.log(balanceRaw)
 
-		 var balanceRaw = await Web3Helper.getTokensBalance(CryptoAssets.assets["0xBTC"]['EthereumContract'], this.activeAccountAddress )
-		 console.log(balanceRaw)
-		 this.assetBalances["0xBTC"] = balanceRaw / CryptoAssets.assets["0xBTC"]['DecimalMultiplier'];
+				 this.assetBalances["0xBTC"] = Web3Helper.rawAmountToFormatted(balanceRaw, CryptoAssets.assets["0xBTC"]['Decimals']);
+  	 }
+			 if(this.network == "matic"){
+				 var web3provider = new Web3(Web3.givenProvider || 'ws://localhost:8546');
+				 var userAddress = this.activeAccountAddress;
 
+				 var maticClient = MaticHelper.getMaticPOSClient(web3provider,userAddress);
+				 var balanceRaw = await maticClient.balanceOfERC20(
+					 userAddress,
+					 CryptoAssets.assets['0xBTC']['MaticContract'],
+					 {}
+				 )
+				 this.assetBalances["0xBTC"] = Web3Helper.rawAmountToFormatted(balanceRaw, CryptoAssets.assets["0xBTC"]['Decimals']);
+
+			 }
 	 },
 
 

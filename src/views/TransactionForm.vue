@@ -45,19 +45,21 @@ export default {
     return {
       swapAmount: 0,
       formMode: "none",
-      currentBalance: '0.0'
+      currentBalance: '0.0',
+      burnTXHash: null
     }
   },
-  created()
+  mounted()
   {
 
     this.updateFormMode();
-    setInterval(this.updateFormMode, 5000);
-    setInterval(this.updateBalance, 5000);
+    this.updateBalance();
+    setInterval(this.updateFormMode, 2000);
+    setInterval(this.updateBalance, 2000);
   },
   updated()
   {
-        this.updateBalance();
+    //    this.updateBalance();
   },
   methods: {
     otherNetworkName(){
@@ -65,10 +67,28 @@ export default {
     },
     async updateBalance()
     {
+      if(this.activeNetwork == "ethereum"){
+        var balanceRaw = await Web3Helper.getTokensBalance(
+          CryptoAssets.assets[this.assetName]['EthereumContract'],
+           this.acctAddress
+         )
+        this.currentBalance =  Web3Helper.rawAmountToFormatted(balanceRaw, CryptoAssets.assets[this.assetName]['Decimals']);
+      }
+      if(this.activeNetwork == "matic"){
+        var web3provider = new Web3(Web3.givenProvider || 'ws://localhost:8546');
+        var userAddress = this.acctAddress;
 
-      var balanceRaw = await Web3Helper.getTokensBalance(CryptoAssets.assets[this.assetName]['EthereumContract'], this.acctAddress )
-      this.currentBalance = balanceRaw / CryptoAssets.assets[this.assetName]['DecimalMultiplier'];
-      console.log('balance',balanceRaw)
+        var maticClient = MaticHelper.getMaticPOSClient(web3provider,userAddress);
+        var balanceRaw = await maticClient.balanceOfERC20(
+          userAddress,
+          CryptoAssets.assets[this.assetName]['MaticContract'],
+          {}
+
+        )
+        this.currentBalance =  Web3Helper.rawAmountToFormatted(balanceRaw, CryptoAssets.assets[this.assetName]['Decimals']);
+
+      }
+
     },
     async updateFormMode()
     {
@@ -101,44 +121,84 @@ export default {
     async approve()
     {
 
-      var Web3 = require('web3');
-      var web3provider = new Web3(Web3.givenProvider || 'ws://localhost:8546');
+      if(this.activeNetwork == "ethereum"){
 
-      console.log('swap');
-      var userAddress = this.acctAddress;
+        var Web3 = require('web3');
+        var web3provider = new Web3(Web3.givenProvider || 'ws://localhost:8546');
+        var userAddress = this.acctAddress;
 
-      var maticClient = MaticHelper.getMaticPOSClient(Web3,web3provider,userAddress);
+        var maticClient = MaticHelper.getMaticPOSClient(web3provider,userAddress);
 
-    //  console.log(CryptoAssets.assets['0xBTC']['EthereumContract'], this.swapAmount, userAddress );
+        var result = await maticClient.approveERC20ForDeposit(
+          CryptoAssets.assets[this.assetName]['EthereumContract'],
+          Web3Helper.formattedAmountToRaw(this.swapAmount, CryptoAssets.assets[this.assetName]['Decimals']),
+          {from: userAddress}
+        )
+      }
 
-      var result = await maticClient.approveERC20ForDeposit(
-        CryptoAssets.assets['0xBTC']['EthereumContract'],
-        this.swapAmount * CryptoAssets.assets['0xBTC']['DecimalMultiplier'],
-        {from: userAddress}
-      )
+      if(this.activeNetwork == "matic"){
+
+        var Web3 = require('web3');
+        var web3provider = new Web3(Web3.givenProvider || 'ws://localhost:8546');
+        var userAddress = this.acctAddress;
+
+        var maticClient = MaticHelper.getMaticPOSClient(web3provider,userAddress);
+
+        var result = await maticClient.burnERC20(
+          CryptoAssets.assets[this.assetName]['EthereumContract'],
+            Web3Helper.formattedAmountToRaw(this.swapAmount, CryptoAssets.assets[this.assetName]['Decimals']),
+          {from: userAddress}
+        )
+
+
+
+      }
 
 
     },
     async swap()
     {
 
-      var Web3 = require('web3');
-      var web3provider = new Web3(Web3.givenProvider || 'ws://localhost:8546');
+      if(this.activeNetwork == "ethereum"){
 
-      console.log('swap');
-      var userAddress = this.acctAddress;
+          var Web3 = require('web3');
+          var web3provider = new Web3(Web3.givenProvider || 'ws://localhost:8546');
+          var userAddress = this.acctAddress;
 
-      var maticClient = MaticHelper.getMaticPOSClient(Web3,web3provider,userAddress);
+          var maticClient = MaticHelper.getMaticPOSClient(web3provider,userAddress);
 
-    //  console.log(CryptoAssets.assets['0xBTC']['EthereumContract'], this.swapAmount, userAddress );
+        //  console.log(CryptoAssets.assets['0xBTC']['EthereumContract'], this.swapAmount, userAddress );
 
 
-      var result = await maticClient.depositERC20ForUser(
-        CryptoAssets.assets['0xBTC']['EthereumContract'],
-        userAddress,
-        this.swapAmount  * CryptoAssets.assets['0xBTC']['DecimalMultiplier'],
-        {from: userAddress}
-      )
+          var result = await maticClient.depositERC20ForUser(
+            CryptoAssets.assets[this.assetName]['EthereumContract'],
+            userAddress,
+              Web3Helper.formattedAmountToRaw(this.swapAmount  * CryptoAssets.assets[this.assetName]['Decimals']),
+            {from: userAddress}
+          )
+
+          // get burn tx hash
+        }
+
+        if(this.activeNetwork == "matic"){
+
+          var Web3 = require('web3');
+          var web3provider = new Web3(Web3.givenProvider || 'ws://localhost:8546');
+          var userAddress = this.acctAddress;
+
+          var maticClient = MaticHelper.getMaticPOSClient(web3provider,userAddress);
+
+          var result = await maticClient.exitERC20(
+            this.burnTXHash,
+            {from: userAddress}
+          )
+
+
+
+        }
+
+
+
     }
 
   }

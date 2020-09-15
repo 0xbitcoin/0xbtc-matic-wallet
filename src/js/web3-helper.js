@@ -58,6 +58,18 @@ var helper = {
     return allowance;
   },
 
+  rawAmountToFormatted(amount,decimals)
+  {
+    console.log('formatting',amount,decimals)
+    return (amount * Math.pow(10,-1 * decimals)).toFixed(decimals);
+  },
+
+  formattedAmountToRaw(amountFormatted,decimals)
+  {
+
+    return (amountFormatted * Math.pow(10,decimals));
+  },
+
   async connect()
   {
     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });

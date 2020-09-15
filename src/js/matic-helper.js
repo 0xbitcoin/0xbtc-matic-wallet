@@ -2,11 +2,11 @@
 
   const MaticPOSClient = require("@maticnetwork/maticjs").MaticPOSClient;
   const config =require("./config-0xbtc")
-
+  var Web3 = require('web3');
 
 var helper = {
 
-   getMaticPOSClient (Web3,ethProvider,userAddress) {
+   getMaticPOSClient (ethProvider,userAddress) {
     return new MaticPOSClient({
       network: "mainnet", // For testnet change this to testnet
       version: "v1", // For testnet change this to mumbai
@@ -43,4 +43,19 @@ await maticPOSClient.depositERC20ForUser(
   options // transaction fields, can be skipped if default options are set
 )
 
+
+
+// Burn ERC20 tokens(deposited using POS Portal) on Matic chain and retrieve the Transaction hash
+    await maticPOSClient.burnERC20(
+      childToken, // ChildToken address
+      amount, // Amount to burn (in wei)
+      options // transaction fields, can be skipped if default options are set
+    )
+
+    // Exit funds from the POS Portal using the Transaction hash generated from the 'burnERC20' method
+    // Can be called after checkpoint has been submitted for the block containing burn tx.
+    await maticPOSClient.exitERC20(
+      txHash, // Transaction hash generated from the 'burnERC20' method
+      options // transaction fields, can be skipped if default options are set
+    )
 */

@@ -4,6 +4,8 @@
 
 A web3 wallet for 0xBTC that works with the Matic and Ethereum networks.
 
+This dapp is deployed at Https://wallet.0xbtc.io
+
 
 
 ## Project setup

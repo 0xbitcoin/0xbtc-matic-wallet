@@ -50,9 +50,14 @@ export default {
   },
   created()
   {
-    this.updateBalance();
+
     this.updateFormMode();
     setInterval(this.updateFormMode, 5000);
+    setInterval(this.updateBalance, 5000);
+  },
+  updated()
+  {
+        this.updateBalance();
   },
   methods: {
     otherNetworkName(){
@@ -60,9 +65,10 @@ export default {
     },
     async updateBalance()
     {
+
       var balanceRaw = await Web3Helper.getTokensBalance(CryptoAssets.assets[this.assetName]['EthereumContract'], this.acctAddress )
       this.currentBalance = balanceRaw / CryptoAssets.assets[this.assetName]['DecimalMultiplier'];
-      console.log('balance',balance)
+      console.log('balance',balanceRaw)
     },
     async updateFormMode()
     {

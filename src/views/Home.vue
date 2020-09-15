@@ -56,12 +56,12 @@
 
 				<div class="container mt-8">
 
-					<div class="flex width-full bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ">
+					<a href="#" @click="selectAsset('0xBTC')" class="flex width-full bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ">
 						<div class="text-md w-1/2"> 0xBTC </div>
-						<div class="text-md w-1/2 text-right"> 0.0 </div>
+						<div class="text-md w-1/2 text-right"> {{ assetBalances["0xBTC"] }} </div>
 
 
-					</div>
+					</a>
 
 				</div>
 
@@ -80,6 +80,7 @@
 import MetamaskDropdown from './MetamaskDropdown.vue'
 import TransactionForm from './TransactionForm.vue'
 import Web3Helper from '../js/web3-helper.js'
+import CryptoAssets from '../js/cryptoassets.js'
 
 export default {
   name: 'Home',
@@ -90,17 +91,19 @@ export default {
     return {
       activeAccountAddress: null,
 			network: 'ethereum',
-			assetName: '0xBTC'
+			assetName: '0xBTC',
+			assetBalances: {"0xBTC": 0}
     }
   },
   created () {
 
     this.checkSignedIn()
 
-
     Web3Helper.init();
 
     this.readWeb3Data();
+
+
 
   },
   methods: {
@@ -119,16 +122,33 @@ export default {
          this.$router.replace('/login');
          return;
       }
+
+
     },
    async readWeb3Data () {
      var accounts = await Web3Helper.getConnectedAccounts();
 
      this.activeAccountAddress = accounts[0]
+
+		 this.updateBalances()
    },
 	 setNetwork(networkName)
 	 {
 		 this.network = networkName;
-	 }
+	 },
+	 selectAsset(assetName)
+	 {
+		 this.assetName = assetName;
+	 },
+
+	 async updateBalances()
+	 {
+
+		 var balanceRaw = await Web3Helper.getTokensBalance(CryptoAssets.assets["0xBTC"]['EthereumContract'], this.activeAccountAddress )
+		 console.log(balanceRaw)
+		 this.assetBalances["0xBTC"] = balanceRaw / CryptoAssets.assets["0xBTC"]['DecimalMultiplier'];
+
+	 },
 
 
   }

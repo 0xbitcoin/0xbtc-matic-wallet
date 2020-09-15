@@ -15,7 +15,7 @@
           <button v-if="formMode=='none'"  class="bg-white text-sm text-gray-200 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded inline-block">
             Swap To {{otherNetworkName()}}
           </button>
-
+          
           <button v-if="formMode=='approve'" @click="approve" class="bg-white text-sm hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded inline-block ">
             Approve
           </button>
@@ -94,7 +94,7 @@ export default {
         }
       }
 
-      if(this.activeNetwork == "matic")
+      /*if(this.activeNetwork == "matic" && this.formMode == "approve")
       {
         if(this.providerNetworkID != Web3Helper.maticChainID())
         {
@@ -102,6 +102,15 @@ export default {
           return false
         }
       }
+
+      if(this.activeNetwork == "matic" && this.formMode == "swap")
+      {
+        if(this.providerNetworkID != Web3Helper.maticChainID())
+        {
+          this.networkProviderIdError = "Please switch your Web3 Provider to Matic Mainnet (Chain ID: 137) to call these methods."
+          return false
+        }
+      }*/
 
       this.networkProviderIdError = null;
       return true;
@@ -249,7 +258,7 @@ export default {
           var web3provider = new Web3(Web3.givenProvider || 'ws://localhost:8546');
           var userAddress = this.acctAddress;
 
-          var maticClient = MaticHelper.getMaticPOSConnection(web3provider,userAddress);
+          var maticClient = MaticHelper.getMaticPOSClient(web3provider,userAddress);
 
           var result = await maticClient.exitERC20(
             this.burnTXHash,

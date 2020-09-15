@@ -29,27 +29,28 @@
   <div class="flex mb-4">
     <div class="w-1/3 bg-gray-300 overflow-y-scroll ">
       <div class="m-6 p-4 bg-gray-100">
-        <h3 class="text-lg font-bold">Wallet Balance</h3>
 
-				<div class="p-12 text-xl w-full text-center">
-					0
-				</div>
 
-				<div>
-					<button class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
-						Deposit
-					</button>
-					<br>
-					<button class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
-						Withdraw
-					</button>
-				</div>
+				<TransactionForm
+				:acctAddress= "activeAccountAddress"
+				:activeNetwork= "network"
+				/>
 
       </div>
     </div>
     <div class="w-2/3 bg-gray-300  ">
       <div class="m-6 p-4 bg-gray-100">
-				<h3 class="text-lg font-bold">Your Tokens</h3>
+
+				<ul class="flex m-6">
+				  <li class="flex-1 mr-2">
+				    <a @click="setNetwork('ethereum')" :class="network=='ethereum' ? 'bg-blue-500  text-white' : 'bg-transparent hover:border-gray-200 hover:bg-gray-200 text-gray-500'" class="text-center block border border-blue-500 rounded py-2 px-4 " href="#">Ethereum Network</a>
+				  </li>
+				  <li class="flex-1 mr-2">
+				    <a @click="setNetwork('matic')" :class="network=='matic' ? 'bg-blue-500  text-white' : 'bg-transparent hover:border-gray-200 hover:bg-gray-200 text-gray-500'" class="text-center block border border-blue-500 rounded py-2 px-4 " href="#">Matic Network</a>
+				  </li>
+				</ul>
+
+				<h3 class="text-lg font-bold">Your Assets</h3>
 
 
 				<div class="container mt-8">
@@ -76,16 +77,18 @@
 
 <script>
 import MetamaskDropdown from './MetamaskDropdown.vue'
+import TransactionForm from './TransactionForm.vue'
 import Web3Helper from '../js/web3-helper.js'
 
 export default {
   name: 'Home',
   components: {
-     MetamaskDropdown
+     MetamaskDropdown,TransactionForm
   },
   data () {
     return {
-      activeAccountAddress: null
+      activeAccountAddress: null,
+			network: 'ethereum'
     }
   },
   created () {
@@ -119,7 +122,11 @@ export default {
      var accounts = await Web3Helper.getConnectedAccounts();
 
      this.activeAccountAddress = accounts[0]
-   }
+   },
+	 setNetwork(networkName)
+	 {
+		 this.network = networkName;
+	 }
 
 
   }

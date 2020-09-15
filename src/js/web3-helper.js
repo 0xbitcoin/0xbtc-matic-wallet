@@ -1,6 +1,7 @@
 /* eslint-disable */
 
 //https://docs.metamask.io/guide/ethereum-provider.html#using-the-provider
+const tokenContractABI = require('../contracts/ERC20ABI.json')
 
 var helper = {
 
@@ -27,6 +28,20 @@ var helper = {
   {
     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
     return accounts;
+  },
+
+  async getTokensAllowance(tokenAddress, spender, ownerAddress)
+  {
+    var Web3 = require('web3');
+    var web3 = new Web3(Web3.givenProvider || 'ws://localhost:8546');
+
+
+    var tokenContract = new web3.eth.Contract(tokenContractABI, tokenAddress, {});
+
+
+    var allowance = await tokenContract.methods.allowance(spender,ownerAddress).call();
+
+    return allowance;
   },
 
   async connect()

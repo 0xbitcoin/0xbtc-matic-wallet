@@ -1,7 +1,7 @@
 module.exports = {
   root: {
-    RPC: "https://mainnet.infura.io/v3/YOUR_INFURA_KEY",
-    DERC20: "0xb6ed7644c69416d67b522e20bc294a9a9b405b31",  // ROOT ADDRESS https://etherscan.io/token/0xb6ed7644c69416d67b522e20bc294a9a9b405b31 
+    RPC: "https://mainnet.infura.io/v3/ff7c8dd5cc424fc1b78b5509d033dea2",
+    DERC20: "0xb6ed7644c69416d67b522e20bc294a9a9b405b31",  // ROOT ADDRESS https://etherscan.io/token/0xb6ed7644c69416d67b522e20bc294a9a9b405b31
   },
   child: {
     RPC: "https://rpc-mainnet.matic.network",

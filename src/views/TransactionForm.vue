@@ -93,9 +93,6 @@ export default {
     async updateFormMode()
     {
       console.log('updateFormMode');
-      var numApproved = await Web3Helper.getTokensAllowance(CryptoAssets.assets['0xBTC']['EthereumContract'], this.acctAddress, CryptoAssets.assets['0xBTC']['EthereumPredicateContract'] )
-
-      console.log('num Approved ', numApproved)
 
       if(this.swapAmount <= 0 )
       {
@@ -103,12 +100,25 @@ export default {
           return;
       }
 
-      if(numApproved < this.swapAmount)
-      {
-        this.formMode= "approve"
-      }else{
-        this.formMode= "swap"
-      }
+      if(this.activeNetwork == "ethereum"){
+
+          var numApproved = await Web3Helper.getTokensAllowance(CryptoAssets.assets['0xBTC']['EthereumContract'], this.acctAddress, CryptoAssets.assets['0xBTC']['EthereumPredicateContract'] )
+
+          console.log('num Approved ', numApproved)
+
+
+
+          if(numApproved < this.swapAmount)
+          {
+            this.formMode= "approve"
+          }else{
+            this.formMode= "swap"
+          }
+        }
+
+        if(this.activeNetwork == "matic"){
+          this.formMode= "approve"
+        }
 
 
 
@@ -142,13 +152,14 @@ export default {
         var web3provider = new Web3(Web3.givenProvider || 'ws://localhost:8546');
         var userAddress = this.acctAddress;
 
-        var maticClient = MaticHelper.getMaticPOSClient(web3provider,userAddress);
+        var maticClient = MaticHelper.getMaticPOSConnection(web3provider,userAddress);
 
         var result = await maticClient.burnERC20(
-          CryptoAssets.assets[this.assetName]['EthereumContract'],
+          CryptoAssets.assets[this.assetName]['MaticContract'],
             Web3Helper.formattedAmountToRaw(this.swapAmount, CryptoAssets.assets[this.assetName]['Decimals']),
           {from: userAddress}
         )
+        console.log(result)
 
 
 

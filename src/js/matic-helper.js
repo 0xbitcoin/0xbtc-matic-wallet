@@ -6,6 +6,7 @@
 
 var helper = {
 
+  //readonly
    getMaticPOSClient (ethProvider,userAddress) {
     return new MaticPOSClient({
       network: "mainnet", // For testnet change this to testnet
@@ -15,7 +16,17 @@ var helper = {
       parentDefaultOptions: { from: userAddress }, // optional, can also be sent as last param while sending tx
       maticDefaultOptions: { from: userAddress }, // optional, can also be sent as last param while sending tx
     });
-  }
+  },
+  getMaticPOSConnection(maticProvider,userAddress) {
+   return new MaticPOSClient({
+     network: "mainnet", // For testnet change this to testnet
+     version: "v1", // For testnet change this to mumbai
+     parentProvider: new Web3.providers.HttpProvider(config.root.RPC),
+     maticProvider: maticProvider  , //<network.Matic.RPC> OR new Web3.providers.HttpProvide(<network.Matic.RPC>)
+     parentDefaultOptions: { from: userAddress }, // optional, can also be sent as last param while sending tx
+     maticDefaultOptions: { from: userAddress }, // optional, can also be sent as last param while sending tx
+   });
+ }
 
 }
 

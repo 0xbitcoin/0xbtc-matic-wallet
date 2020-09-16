@@ -28,12 +28,12 @@
             <button v-if="formMode=='swapin'" @click="swapin" class="bg-white  text-sm hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded inline-block">
               Swap To {{otherNetworkName()}}
             </button>
-       
+
 
 
 
           <div v-if="formMode=='swapout'">
-            <input v-on:keyup="updateFormMode" type="text" v-model="swapAmount" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline inline-block mr-4" size="8"/>
+            <input v-on:keyup="updateFormMode" type="text" v-model="swapOutAmount" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline inline-block mr-4" size="8"/>
 
             <button @click="startexit" class="bg-white text-sm hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded inline-block ">
               Start Exit
@@ -87,6 +87,7 @@ export default {
   data() {
     return {
       swapAmount: 0,
+      swapOutAmount: 0,
       formMode: "none",
       currentBalance: '0.0',
       burnTXHash: null,
@@ -174,17 +175,13 @@ export default {
         }
 
 
-          var numApproved = await Web3Helper.getTokensAllowance(CryptoAssets.assets[this.assetName]['EthereumContract'], this.acctAddress, CryptoAssets.assets[this.assetName]['EthereumPredicateContract'] )
+        var hasAllowance = await Web3Helper.hasEnoughAllowance(this.acctAddress,this.assetName,this.swapAmount);
 
-          console.log('num Approved ', numApproved)
-
-
-
-          if(numApproved < this.swapAmount)
+          if(hasAllowance)
           {
-            this.formMode= "approve"
-          }else{
             this.formMode= "swapin"
+          }else{
+            this.formMode= "approve"
           }
         }
 
@@ -249,7 +246,7 @@ export default {
 
         var result = await maticClient.burnERC20(
           CryptoAssets.assets[this.assetName]['MaticContract'],
-            Web3Helper.formattedAmountToRaw(this.swapAmount, CryptoAssets.assets[this.assetName]['Decimals']),
+            Web3Helper.formattedAmountToRaw(this.swapOutAmount, CryptoAssets.assets[this.assetName]['Decimals']),
           {from: userAddress}
         )
         console.log(result)
@@ -271,6 +268,7 @@ export default {
 
       if(this.providerNetworkID == 0x1){
 
+
           var Web3 = require('web3');
           var web3provider = new Web3(Web3.givenProvider || 'ws://localhost:8546');
           var userAddress = this.acctAddress;
@@ -278,13 +276,16 @@ export default {
           var maticClient = MaticHelper.getMaticPOSClient(web3provider,userAddress);
 
 
+          console.log('swapin', this.swapAmount)
+          //console.log('meep',Web3Helper.formattedAmountToRaw(this.swapAmount, CryptoAssets.assets[this.assetName]['Decimals']))
 
+     
 
           var result = await maticClient.depositERC20ForUser(
             CryptoAssets.assets[this.assetName]['EthereumContract'],
             userAddress,
-              Web3Helper.formattedAmountToRaw(this.swapAmount  * CryptoAssets.assets[this.assetName]['Decimals']),
-            {from: userAddress}
+            Web3Helper.formattedAmountToRaw(this.swapAmount, CryptoAssets.assets[this.assetName]['Decimals']),
+           {from: userAddress}
           )
 
           // get burn tx hash

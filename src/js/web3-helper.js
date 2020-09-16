@@ -4,6 +4,10 @@
 const tokenContractABI = require('../contracts/ERC20ABI.json')
 const config = require('./config-0xbtc.js')
 
+const CryptoAssets = require ('./cryptoassets.js')
+
+
+
 const Web3 = require('web3');
 const web3utils = Web3.utils;
 //var max_target = web3utils.toBN( 2 ).pow( web3utils.toBN( 234 ) ) ;
@@ -51,7 +55,22 @@ var helper = {
     console.log('net id is', net_id)
     return net_id;
   },
+  async hasEnoughAllowance(acctAddress,assetName,swapAmountFormatted)
+  {
 
+        var numApproved = await this.getTokensAllowance(CryptoAssets.assets[assetName]['EthereumContract'], acctAddress, CryptoAssets.assets[assetName]['EthereumPredicateContract'] )
+
+
+        console.log('num swapping ', swapAmountFormatted)
+
+        var numApprovedFormatted = this.rawAmountToFormatted(numApproved,CryptoAssets.assets[assetName]['Decimals'])
+
+          console.log('num Approved ', numApprovedFormatted)
+
+      return  ( parseFloat(numApprovedFormatted) > parseFloat(swapAmountFormatted) )
+
+
+  },
   async getTokensAllowance(tokenAddress, spender, ownerAddress)
   {
 

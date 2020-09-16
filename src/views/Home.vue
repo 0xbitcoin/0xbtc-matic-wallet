@@ -33,6 +33,7 @@
 
 
 				<TransactionForm
+				ref="txform"
 				:acctAddress= "activeAccountAddress"
 				:activeNetwork= "network"
 				:providerNetworkID= "providerNetworkID"
@@ -146,13 +147,18 @@ export default {
 	 {
 		 this.network = networkName;
 
-		// await this.updateBalances()
+		 // await this.updateBalances()
+
+		 this.$refs.txform.updateAll()
 	 },
 	 async selectAsset(assetName)
 	 {
 		 this.assetName = assetName;
 
-		// await this.updateBalances()
+
+ 		this.$refs.txform.updateAll()
+
+		 // await this.updateBalances()
 	 },
 
 	/* async updateBalances()

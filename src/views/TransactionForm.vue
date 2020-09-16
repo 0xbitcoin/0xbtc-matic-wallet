@@ -11,27 +11,24 @@
 
         <div class="p-6 bg-gray-500 w-full text-sm">
 
+
+          <input v-if="formMode=='none'||formMode=='approve'||formMode=='swapin'" v-on:keyup="updateFormMode" type="text" v-model="swapAmount" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline inline-block mr-4" size="8"/>
+
+
           <button v-if="formMode=='none'"  class="bg-white text-sm text-gray-200 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded inline-block">
-            <input v-on:keyup="updateFormMode" type="text" v-model="swapAmount" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline inline-block mr-4" size="8"/>
 
             Swap To {{otherNetworkName()}}
           </button>
 
-          <div v-if="formMode=='approve'">
-            <input v-on:keyup="updateFormMode" type="text" v-model="swapAmount" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline inline-block mr-4" size="8"/>
 
             <button v-if="formMode=='approve'" @click="approve" class="bg-white text-sm hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded inline-block ">
               Approve
             </button>
-          </div>
 
-          <div v-if="formMode=='swapin'">
-            <input v-on:keyup="updateFormMode" type="text" v-model="swapAmount" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline inline-block mr-4" size="8"/>
-
-            <button @click="swapin" class="bg-white  text-sm hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded inline-block">
+            <button v-if="formMode=='swapin'" @click="swapin" class="bg-white  text-sm hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded inline-block">
               Swap To {{otherNetworkName()}}
             </button>
-          </div>
+       
 
 
 
@@ -101,18 +98,22 @@ export default {
   mounted()
   {
 
-    this.updateFormMode();
-    this.updateBalance();
+    this.updateAll();
     setTimeout(this.updateFormMode, 2000);
     setTimeout(this.updateBalance, 2000);
   },
   updated()
   {
-    console.log('form updated')
-    this.updateFormMode();
-    this.updateBalance();
+
+    this.updateAll();
   },
   methods: {
+    updateAll()
+    {
+        console.log('form updated')
+      this.updateFormMode();
+      this.updateBalance();
+    },
     otherNetworkName(){
       if(this.activeNetwork == "matic"){ return "Ethereum" }else{ return "Matic" }
     },
@@ -314,7 +315,11 @@ export default {
 
         var maticClient = MaticHelper.getMaticPOSClient(web3provider,userAddress);
 
-        var result = await maticClient.exitERC20(this.burnTXHash)
+        var result = await maticClient.exitERC20(this.burnTXHash,{
+            fastProof: true,
+            from: userAddress,
+            gasPrice: 500000000000
+          })
 
         this.loading=false;
         console.log(result.transactionHash)

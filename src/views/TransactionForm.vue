@@ -281,7 +281,7 @@ export default {
 
           var rawAmount = Web3Helper.formattedAmountToRaw(this.swapAmount, CryptoAssets.assets[this.assetName]['Decimals']);
 
-console.log('swapin', userAddress, rawAmount ,  CryptoAssets.assets[this.assetName]['EthereumContract'])
+            console.log('swapin', userAddress, rawAmount ,  CryptoAssets.assets[this.assetName]['EthereumContract'])
 
           var result = await maticClient.depositERC20ForUser(
             CryptoAssets.assets[this.assetName]['EthereumContract'],

@@ -65,6 +65,11 @@
 
 					</a>
 
+					<a href="#" @click="selectAsset('Dai')" :class="assetName=='Dai' ? 'bg-blue-400 text-white' : 'bg-transparent text-blue-700'" class="flex width-full  hover:bg-blue-500  font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ">
+						<div class="text-md w-1/2"> Dai </div>
+						<div class="text-md w-1/2 text-right">   </div>
+
+					</a>
 					<a href="#" @click="selectAsset('Matic')" :class="assetName=='Matic' ? 'bg-blue-400 text-white' : 'bg-transparent text-blue-700'" class="flex width-full  hover:bg-blue-500  font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ">
 						<div class="text-md w-1/2"> Matic </div>
 						<div class="text-md w-1/2 text-right">   </div>

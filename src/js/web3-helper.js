@@ -4,6 +4,10 @@
 const tokenContractABI = require('../contracts/ERC20ABI.json')
 const config = require('./config-0xbtc.js')
 
+const Web3 = require('web3');
+const web3utils = Web3.utils;
+//var max_target = web3utils.toBN( 2 ).pow( web3utils.toBN( 234 ) ) ;
+
 
 var helper = {
 
@@ -50,7 +54,7 @@ var helper = {
 
   async getTokensAllowance(tokenAddress, spender, ownerAddress)
   {
-    var Web3 = require('web3');
+
     var web3 = new Web3(config.root.RPC);
 
 
@@ -64,7 +68,7 @@ var helper = {
 
   async getTokensBalance(tokenAddress, ownerAddress)
   {
-    var Web3 = require('web3');
+
     var web3 = new Web3(config.root.RPC);
 
 
@@ -85,7 +89,10 @@ var helper = {
   formattedAmountToRaw(amountFormatted,decimals)
   {
 
-    return (amountFormatted * Math.pow(10,decimals));
+    var multiplier = web3utils.toBN( 10 ).pow( web3utils.toBN(decimals) ) ;
+
+
+    return web3utils.toBN(amountFormatted).mul(web3utils.toBN(multiplier)).toString();
   },
 
   async connect()

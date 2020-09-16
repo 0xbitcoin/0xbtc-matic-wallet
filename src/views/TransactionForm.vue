@@ -276,15 +276,17 @@ export default {
           var maticClient = MaticHelper.getMaticPOSClient(web3provider,userAddress);
 
 
-          console.log('swapin', this.swapAmount)
+
           //console.log('meep',Web3Helper.formattedAmountToRaw(this.swapAmount, CryptoAssets.assets[this.assetName]['Decimals']))
 
-     
+          var rawAmount = Web3Helper.formattedAmountToRaw(this.swapAmount, CryptoAssets.assets[this.assetName]['Decimals']);
+
+console.log('swapin', userAddress, rawAmount ,  CryptoAssets.assets[this.assetName]['EthereumContract'])
 
           var result = await maticClient.depositERC20ForUser(
             CryptoAssets.assets[this.assetName]['EthereumContract'],
             userAddress,
-            Web3Helper.formattedAmountToRaw(this.swapAmount, CryptoAssets.assets[this.assetName]['Decimals']),
+            rawAmount,
            {from: userAddress}
           )
 

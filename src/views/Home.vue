@@ -27,8 +27,8 @@
 
 
 
-  <div class="flex mb-4">
-    <div class="w-1/3 bg-gray-300 overflow-y-scroll ">
+  <div class="lg:flex mb-4">
+    <div class="w-full lg:w-1/3 bg-gray-300 overflow-y-scroll block ">
       <div class="m-6 p-4 bg-gray-100">
 
 				<TransactionForm
@@ -42,7 +42,7 @@
 
       </div>
     </div>
-    <div class="w-2/3 bg-gray-300  ">
+    <div class="w-full lg:w-2/3 bg-gray-300 block ">
       <div class="m-6 p-4 bg-gray-100">
 
 				<ul class="flex m-6">
@@ -115,7 +115,7 @@ export default {
   },
   created () {
 
-		 
+
      this.checkSignedIn()
 
 

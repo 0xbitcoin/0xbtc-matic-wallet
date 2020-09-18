@@ -31,7 +31,6 @@
     <div class="w-1/3 bg-gray-300 overflow-y-scroll ">
       <div class="m-6 p-4 bg-gray-100">
 
-
 				<TransactionForm
 				ref="txform"
 				:acctAddress= "activeAccountAddress"
@@ -39,6 +38,7 @@
 				:providerNetworkID= "providerNetworkID"
 				:assetName= "assetName"
 				/>
+
 
       </div>
     </div>
@@ -96,6 +96,10 @@ import Web3Helper from '../js/web3-helper.js'
 import CryptoAssets from '../js/cryptoassets.js'
 import MaticHelper from '../js/matic-helper.js'
 
+const Web3 = require('web3');
+
+
+
 export default {
   name: 'Home',
   components: {
@@ -111,31 +115,32 @@ export default {
   },
   created () {
 
-    this.checkSignedIn()
+		 
+     this.checkSignedIn()
 
-    Web3Helper.init();
 
-    this.readWeb3Data();
 
+			if ( window.ethereum.selectedAddress) {
+				 Web3Helper.init();
+	      	this.readWeb3Data();  //opens the window
+		 }
 
 
   },
   methods: {
    async checkSignedIn () {
-      if (typeof window.ethereum == 'undefined') {
-          this.$router.replace('/login');
-          return;
-      }
 
-      await window.ethereum
 
-      var connected = await window.ethereum.isConnected()
-      console.log("connected? ",connected)
-      if(!connected)
-      {
-         this.$router.replace('/login');
-         return;
-      }
+
+		await window.ethereum
+
+		console.log(window.ethereum)
+
+		 if (!window.ethereum.selectedAddress) {
+			 this.$router.replace('/login');
+			 return;
+		}
+
 
 
     },
@@ -166,28 +171,7 @@ export default {
 		 // await this.updateBalances()
 	 },
 
-	/* async updateBalances()
-	 {
-		   if(this.network == "ethereum"){
-				 var balanceRaw = await Web3Helper.getTokensBalance(CryptoAssets.assets["0xBTC"]['EthereumContract'], this.activeAccountAddress )
-				 console.log(balanceRaw)
 
-				 this.assetBalances["0xBTC"] = Web3Helper.rawAmountToFormatted(balanceRaw, CryptoAssets.assets["0xBTC"]['Decimals']);
-  	 }
-			 if(this.network == "matic"){
-				 var web3provider = new Web3(Web3.givenProvider || 'ws://localhost:8546');
-				 var userAddress = this.activeAccountAddress;
-
-				 var maticClient = MaticHelper.getMaticPOSClient(web3provider,userAddress);
-				 var balanceRaw = await maticClient.balanceOfERC20(
-					 userAddress,
-					 CryptoAssets.assets['0xBTC']['MaticContract'],
-					 {}
-				 )
-				 this.assetBalances["0xBTC"] = Web3Helper.rawAmountToFormatted(balanceRaw, CryptoAssets.assets["0xBTC"]['Decimals']);
-
-			 }
-	 },*/
 
 
   }

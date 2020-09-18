@@ -33,12 +33,27 @@
 <script>
 import Modal from '@/components/Modal.vue'
 
+const Web3 = require('web3');
+
+
+const connectEth = async () => {
+  if (window.ethereum) {
+    window.web3 = new Web3(window.ethereum);
+    await window.ethereum.enable();
+
+    return true;
+  }
+  return false;
+}
+
+
+
 export default {
   components: {
     Modal
   },
   created () {
-    this.checkForProvider()
+     this.checkForProvider()
   },
   data() {
     return {
@@ -48,11 +63,20 @@ export default {
   },
   methods: {
     checkForProvider () {
-      if (typeof window.ethereum == 'undefined') {
+
+       if (!window.ethereum) {
         this.error = "No Web3 Provider detected. Please install Metamask or use a compatible Web3 browser."
       }
+
+
     },
     async requestMetamask () {
+
+
+      if (!window.ethereum.selectedAddress) {
+        await connectEth();
+     }
+
       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
       const account = accounts[0];
 

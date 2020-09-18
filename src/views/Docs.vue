@@ -21,18 +21,19 @@
 
 
 
-      <div class="flex mb-4">
-        <div class="w-1/3 bg-gray-300 overflow-y-scroll ">
+      <div class="lg:flex mb-4">
+        <div class="w-full lg:w-1/3 bg-gray-300 overflow-y-scroll ">
           <div class="m-6 p-4 bg-gray-100">
 
             <ul>
+              <li class="text-lg text-gray-500"> Getting Started </li>
               <li> <a href="#" @click="setContent('purpose')"> Purpose Statement </a> </li>
               <li> <a href="#" @click="setContent('connecting')"> Connecting with Metamask </a> </li>
-          </ul>
+           </ul>
 
           </div>
         </div>
-        <div class="w-2/3 bg-gray-300  ">
+        <div class="w-full lg:w-2/3 bg-gray-300  ">
           <div class="m-6 p-4 bg-gray-100">
 
 

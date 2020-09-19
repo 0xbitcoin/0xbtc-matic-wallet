@@ -6,7 +6,7 @@ const config = require('./config-0xbtc.js')
 
 const CryptoAssets = require ('./cryptoassets.js')
 
-
+const BigNumber = require('bignumber.js');
 
 const Web3 = require('web3');
 const web3utils = Web3.utils;
@@ -108,10 +108,10 @@ var helper = {
   formattedAmountToRaw(amountFormatted,decimals)
   {
 
-    var multiplier = web3utils.toBN( 10 ).pow( web3utils.toBN(decimals) ) ;
+    var multiplier = new BigNumber( 10 ).exponentiatedBy( decimals ) ;
 
 
-    return web3utils.toBN(amountFormatted).mul(web3utils.toBN(multiplier)).toString();
+    return multiplier.multipliedBy(amountFormatted).toNumber().toString();
   },
 
   async connect()

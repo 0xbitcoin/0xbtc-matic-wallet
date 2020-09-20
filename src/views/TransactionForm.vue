@@ -105,6 +105,7 @@
 </template>
 
 <script>
+
 import Web3Helper from '../js/web3-helper.js'
 import MaticHelper from '../js/matic-helper.js'
 import CryptoAssets from '../js/cryptoassets.js'
@@ -240,11 +241,96 @@ export default {
     },
     async standardApprove()
     {
-      //finish me
+
+
+      var web3 = window.web3
+      var userAddress = this.acctAddress;
+      var amt  = Web3Helper.formattedAmountToRaw(this.approveAmount, CryptoAssets.assets[this.assetName]['Decimals']);
+
+
+
+      if(this.activeNetwork == "ethereum"){
+        if(this.providerNetworkID == 0x1){
+
+          var contractAddress = CryptoAssets.assets[this.assetName]['EthereumContract'];
+
+
+          var tokenContract = await Web3Helper.getTokenContract(web3,contractAddress,userAddress);
+
+          tokenContract.approve(this.approveTo,amt).send({from: userAddress})
+          .then(function(receipt){
+              // receipt can also be a new contract instance, when coming from a "contract.deploy({...}).send()"
+          });
+
+        }else{
+          this.networkProviderIdError = "Please switch your Web3 Provider to Ethereum Mainnet to call this method."
+        }
+      }
+
+      if(this.activeNetwork == "matic"){
+        if(this.providerNetworkID == 0x89){
+
+          var contractAddress = CryptoAssets.assets[this.assetName]['MaticContract'];
+
+
+          var tokenContract = await Web3Helper.getTokenContract(web3,contractAddress,userAddress);
+
+          tokenContract.approve(this.approveTo,amt).send({from: userAddress})
+          .then(function(receipt){
+              // receipt can also be a new contract instance, when coming from a "contract.deploy({...}).send()"
+          });
+
+        }else{
+          this.networkProviderIdError = "Please switch your Web3 Provider to Ethereum Mainnet to call this method."
+        }
+      }
     },
     async standardTransfer()
     {
-        //finish me
+      var web3 = window.web3
+      var userAddress = this.acctAddress;
+
+      var amt  = Web3Helper.formattedAmountToRaw(this.transferAmount, CryptoAssets.assets[this.assetName]['Decimals']);
+
+
+
+      if(this.activeNetwork == "ethereum"){
+        if(this.providerNetworkID == 0x1){
+
+          var contractAddress = CryptoAssets.assets[this.assetName]['EthereumContract'];
+
+
+          var tokenContract = await Web3Helper.getTokenContract(web3,contractAddress,userAddress);
+
+          console.log(tokenContract)
+          console.log('meep',tokenContract.methods)
+
+          tokenContract.transfer(this.approveTo,amt).send({from: userAddress})
+          .then(function(receipt){
+              // receipt can also be a new contract instance, when coming from a "contract.deploy({...}).send()"
+          });
+
+        }else{
+          this.networkProviderIdError = "Please switch your Web3 Provider to Ethereum Mainnet to call this method."
+        }
+      }
+
+      if(this.activeNetwork == "matic"){
+        if(this.providerNetworkID == 0x89){
+
+          var contractAddress = CryptoAssets.assets[this.assetName]['MaticContract'];
+
+
+          var tokenContract = await Web3Helper.getTokenContract(web3,contractAddress,userAddress);
+          tokenContract.transfer(this.approveTo,amt).send({from: userAddress})
+          .then(function(receipt){
+              // receipt can also be a new contract instance, when coming from a "contract.deploy({...}).send()"
+          });
+
+        }else{
+          this.networkProviderIdError = "Please switch your Web3 Provider to Ethereum Mainnet to call this method."
+        }
+      }
     },
 
     async approveForSwap()

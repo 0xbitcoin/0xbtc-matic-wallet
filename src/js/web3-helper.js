@@ -55,6 +55,14 @@ var helper = {
     console.log('net id is', net_id)
     return net_id;
   },
+  async getTokenContract(web3, contractAddress, fromAddress)
+  {
+
+    var tokenContract =  web3.eth.contract(tokenContractABI).at(contractAddress)
+
+    return tokenContract;
+  },
+
   async hasEnoughAllowance(acctAddress,assetName,swapAmountFormatted)
   {
 

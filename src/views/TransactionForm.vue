@@ -242,6 +242,8 @@ export default {
     async standardApprove()
     {
 
+      this.networkProviderIdError=null;
+
 
       var web3 = window.web3
       var userAddress = this.acctAddress;
@@ -287,6 +289,9 @@ export default {
     },
     async standardTransfer()
     {
+      this.networkProviderIdError=null;
+
+
       var web3 = window.web3
       var userAddress = this.acctAddress;
 

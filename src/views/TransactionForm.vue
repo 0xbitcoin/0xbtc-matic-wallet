@@ -1,7 +1,7 @@
 
 <template>
     <div class="">
-      <h3 class="text-lg font-bold">Wallet Balance</h3>
+      <h3 class="text-lg font-bold">Wallet Balance (On {{currentNetworkName()}} Network)</h3>
 
       <div class="p-12 text-xl w-full text-center">
         {{currentBalance}} {{assetName}}
@@ -9,8 +9,12 @@
 
       <div>
 
-        <div class="p-6 bg-gray-500 w-full text-sm">
+        <div v-if="networkProviderIdError" class="p-8 bg-red-200">
+          {{networkProviderIdError}}
+        </div>
 
+        <div class="p-6 bg-gray-500 w-full text-sm">
+          <h3 class="text-lg text-white mb-8">Bridge {{assetName}} To {{otherNetworkName()}} Network</h3>
 
           <input v-if="formMode=='none'||formMode=='approve'||formMode=='swapin'" v-on:keyup="updateFormMode" type="text" v-model="swapAmount" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline inline-block mr-4" size="8"/>
 
@@ -21,7 +25,7 @@
           </button>
 
 
-            <button v-if="formMode=='approve'" @click="approve" class="bg-white text-sm hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded w-full mt-2 ">
+            <button v-if="formMode=='approve'" @click="approveForSwap" class="bg-white text-sm hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded w-full mt-2 ">
               Approve
             </button>
 
@@ -64,8 +68,32 @@
 
         </div>
 
-        <div v-if="networkProviderIdError" class="p-8 bg-red-200">
-          {{networkProviderIdError}}
+
+
+        <div class="p-6 bg-gray-500 w-full text-sm">
+          <h3 class="text-lg text-white mb-8">Transfer {{assetName}} Within the {{currentNetworkName()}} Network</h3>
+
+
+          <div class="my-4">
+            <input type="text" v-model="transferTo" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline inline-block mr-4" size="8" placeholder="to (address)"/>
+            <input type="text" v-model="transferAmount" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline inline-block mr-4" size="8" placeholder="amount"/>
+
+            <button   @click="standardTransfer" class="bg-white  text-sm hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded inline-block">
+              Transfer
+            </button>
+          </div>
+
+          <div class="my-4">
+            <input type="text" v-model="approveTo" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline inline-block mr-4" size="8" placeholder="to (address)"/>
+            <input type="text" v-model="approveAmount" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline inline-block mr-4" size="8" placeholder="amount"/>
+
+            <button   @click="standardApprove" class="bg-white  text-sm hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded inline-block">
+              Approve
+            </button>
+          </div>
+
+
+
         </div>
 
 
@@ -88,6 +116,10 @@ export default {
     return {
       swapAmount: 0,
       swapOutAmount: 0,
+      transferTo:null,
+      transferAmount:null,
+      approveTo:null,
+      approveAmount:null,
       formMode: "none",
       currentBalance: '0.0',
       burnTXHash: null,
@@ -114,6 +146,9 @@ export default {
         console.log('form updated')
       this.updateFormMode();
       this.updateBalance();
+    },
+    currentNetworkName(){
+      if(this.activeNetwork == "matic"){ return "Matic" }else{ return "Ethereum" }
     },
     otherNetworkName(){
       if(this.activeNetwork == "matic"){ return "Ethereum" }else{ return "Matic" }
@@ -203,7 +238,16 @@ export default {
     {
 
     },
-    async approve()
+    async standardApprove()
+    {
+      //finish me
+    },
+    async standardTransfer()
+    {
+        //finish me
+    },
+
+    async approveForSwap()
     {
 
       this.networkProviderIdError=null;

@@ -29,32 +29,21 @@
 
   <div class="lg:flex mb-4">
     <div class="w-full lg:w-1/3 bg-gray-300 overflow-y-scroll block ">
-      <div class="m-6 p-4 bg-gray-100">
 
-				<TransactionForm
-				ref="txform"
-				:acctAddress= "activeAccountAddress"
-				:activeNetwork= "network"
-				:providerNetworkID= "providerNetworkID"
-				:assetName= "assetName"
-				/>
+			<div class="m-6 p-4 bg-gray-100">
 
 
-      </div>
-    </div>
-    <div class="w-full lg:w-2/3 bg-gray-300 block ">
-      <div class="m-6 p-4 bg-gray-100">
-
-				<ul class="flex m-6">
-				  <li class="flex-1 mr-2">
-				    <a @click="setNetwork('ethereum')" :class="network=='ethereum' ? 'bg-blue-500  text-white' : 'bg-transparent hover:border-gray-200 hover:bg-gray-200 text-gray-500'" class="text-center block border border-blue-500 rounded py-2 px-4 " href="#">Ethereum Network</a>
-				  </li>
-				  <li class="flex-1 mr-2">
-				    <a @click="setNetwork('matic')" :class="network=='matic' ? 'bg-blue-500  text-white' : 'bg-transparent hover:border-gray-200 hover:bg-gray-200 text-gray-500'" class="text-center block border border-blue-500 rounded py-2 px-4 " href="#">Matic Network</a>
-				  </li>
-				</ul>
 
 				<h3 class="text-lg font-bold">Your Assets</h3>
+
+				<ul class="flex m-6">
+					<li class="flex-1 mr-2">
+						<a @click="setNetwork('ethereum')" :class="network=='ethereum' ? 'bg-blue-500  text-white' : 'bg-transparent hover:border-gray-200 hover:bg-gray-200 text-gray-500'" class="text-center block border border-blue-500 rounded py-2 px-4 " href="#">Ethereum</a>
+					</li>
+					<li class="flex-1 mr-2">
+						<a @click="setNetwork('matic')" :class="network=='matic' ? 'bg-blue-500  text-white' : 'bg-transparent hover:border-gray-200 hover:bg-gray-200 text-gray-500'" class="text-center block border border-blue-500 rounded py-2 px-4 " href="#">Matic</a>
+					</li>
+				</ul>
 
 
 				<div class="container mt-8">
@@ -79,6 +68,27 @@
 				</div>
 
 	  </div>
+
+
+    </div>
+    <div class="w-full lg:w-2/3 bg-gray-300 block ">
+
+			<div class="m-6 p-4 bg-gray-100">
+
+				<TransactionForm
+				ref="txform"
+				:acctAddress= "activeAccountAddress"
+				:activeNetwork= "network"
+				:providerNetworkID= "providerNetworkID"
+				:assetName= "assetName"
+				/>
+
+
+			</div>
+
+
+
+
     </div>
   </div>
 

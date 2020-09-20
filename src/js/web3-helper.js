@@ -66,14 +66,15 @@ var helper = {
   async hasEnoughAllowance(acctAddress,assetName,swapAmountFormatted)
   {
 
-        var numApproved = await this.getTokensAllowance(CryptoAssets.assets[assetName]['EthereumContract'], acctAddress, CryptoAssets.assets[assetName]['EthereumPredicateContract'] )
+        var numApproved = await this.getTokensAllowance(CryptoAssets.assets[assetName]['EthereumContract'], CryptoAssets.assets[assetName]['EthereumPredicateContract'],acctAddress )
 
 
         console.log('num swapping ', swapAmountFormatted)
 
         var numApprovedFormatted = this.rawAmountToFormatted(numApproved,CryptoAssets.assets[assetName]['Decimals'])
 
-          console.log('num Approved ', numApprovedFormatted)
+          console.log('num Approved ',assetName, numApproved)
+          console.log('num Approved f ', numApprovedFormatted)
 
       return  ( parseFloat(numApprovedFormatted) > parseFloat(swapAmountFormatted) )
 
@@ -119,7 +120,7 @@ var helper = {
     var multiplier = new BigNumber( 10 ).exponentiatedBy( decimals ) ;
 
 
-    return multiplier.multipliedBy(amountFormatted).toNumber().toString();
+    return multiplier.multipliedBy(amountFormatted).toFixed() ;
   },
 
   async connect()

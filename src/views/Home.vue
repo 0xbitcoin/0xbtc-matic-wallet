@@ -64,6 +64,16 @@
 						<div class="text-md w-1/2 text-right">   </div>
 
 					</a>
+					<a href="#" @click="selectAsset('WETH')" :class="assetName=='WETH' ? 'bg-blue-400 text-white' : 'bg-transparent text-blue-700'" class="flex width-full  hover:bg-blue-500  font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ">
+						<div class="text-md w-1/2"> WETH </div>
+						<div class="text-md w-1/2 text-right">   </div>
+
+					</a>
+					<a href="#" @click="selectAsset('Kiwi')" :class="assetName=='Kiwi' ? 'bg-blue-400 text-white' : 'bg-transparent text-blue-700'" class="flex width-full  hover:bg-blue-500  font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ">
+						<div class="text-md w-1/2"> Kiwi </div>
+						<div class="text-md w-1/2 text-right">   </div>
+
+					</a>
 
 				</div>
 

@@ -26,6 +26,15 @@ var helper = {
     // returns incorrectly formatted chain ID values.
     let currentChainId = window.ethereum.chainId;
 
+    window.ethereum.on('accountsChanged', handleAccountsChanged);
+
+      // For now, 'eth_accounts' will continue to always return an array
+      function handleAccountsChanged(accounts) {
+        window.location.reload();
+      }
+
+
+
     window.ethereum.on('chainChanged', handleChainChanged);
 
     function handleChainChanged(_chainId) {

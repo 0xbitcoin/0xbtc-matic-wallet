@@ -25,9 +25,12 @@
             <!-- <li>
               <a href="#" class="block px-4 py-2 hover:bg-indigo-500 hover:text-white">Profile</a>
             </li> -->
+
             <li>
-              <span   id="myAddr" class="block px-4 py-2 hover:bg-indigo-500 hover:text-white">{{acctAddress}}</span>
+              <a v-bind:href="'https://explorer.matic.network/address/'+acctAddress" target="_blank" class="block px-4 py-2 hover:bg-indigo-500 hover:text-white">{{acctAddress}}</a>
             </li>
+           
+
             <hr>
             <li>
               <a href="#" @click="disconnect" class="block px-4 py-2 hover:bg-indigo-500 hover:text-white">Sign out</a>

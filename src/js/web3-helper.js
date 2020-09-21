@@ -69,11 +69,12 @@ var helper = {
         var numApproved = await this.getTokensAllowance(CryptoAssets.assets[assetName]['EthereumContract'], CryptoAssets.assets[assetName]['EthereumPredicateContract'],acctAddress )
 
 
-        console.log('num swapping ', swapAmountFormatted)
 
         var numApprovedFormatted = this.rawAmountToFormatted(numApproved,CryptoAssets.assets[assetName]['Decimals'])
 
-          console.log('num Approved ',assetName, numApproved)
+          console.log('swap amount f ',assetName, swapAmountFormatted)
+          console.log('num approved ', numApproved)
+
           console.log('num Approved f ', numApprovedFormatted)
 
       return  ( parseFloat(numApprovedFormatted) > parseFloat(swapAmountFormatted) )
@@ -83,13 +84,32 @@ var helper = {
   async getTokensAllowance(tokenAddress, spender, ownerAddress)
   {
 
+    console.log('get tokens allowance', tokenAddress, spender, ownerAddress )
     var web3 = new Web3(config.root.RPC);
 
 
     var tokenContract = new web3.eth.Contract(tokenContractABI, tokenAddress, {});
 
 
-    var allowance = await tokenContract.methods.allowance(spender,ownerAddress).call();
+      var allowance =0
+      await new Promise((resolve, reject) => {
+        tokenContract.methods.allowance( ownerAddress, spender).call( {}  )
+         .then(function(result){
+           console.log('we got ', result)
+           allowance = result;
+           resolve(result);
+         })
+         .catch(function(err){
+           console.error(err)
+           reject(err)
+         })
+       });
+
+
+
+    //var allowance = await tokenContract.methods.allowance(spender,ownerAddress).call();
+
+    console.log('meep allownace', allowance)
 
     return allowance;
   },

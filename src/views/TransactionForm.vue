@@ -431,19 +431,48 @@ export default {
         var Web3 = require('web3');
         var web3provider = new Web3(Web3.givenProvider || 'ws://localhost:8546');
         var userAddress = this.acctAddress;
+        var tokenAddress =CryptoAssets.assets[this.assetName]['MaticContract'];
+        var rawAmount =  Web3Helper.formattedAmountToRaw(this.swapOutAmount, CryptoAssets.assets[this.assetName]['Decimals']);
 
-        var maticClient = MaticHelper.getMaticPOSConnection(web3provider,userAddress);
 
-        var result = await maticClient.burnERC20(
-          CryptoAssets.assets[this.assetName]['MaticContract'],
-            Web3Helper.formattedAmountToRaw(this.swapOutAmount, CryptoAssets.assets[this.assetName]['Decimals']),
-          {from: userAddress}
-        )
-        console.log(result)
+        var bridgeType = CryptoAssets.assets[this.assetName]['Bridge'];
 
-        var txHash = result.transactionHash;
+          if(bridgeType == 'pos'){
 
-        this.burnTXHash = txhash;
+                var maticClient = MaticHelper.getMaticPOSConnection(web3provider,userAddress);
+
+                var result = await maticClient.burnERC20(
+                  tokenAddress,
+                  rawAmount,
+                  {from: userAddress}
+                )
+                console.log(result)
+
+                var txHash = result.transactionHash;
+
+                this.burnTXHash = txhash;
+
+          }else{
+
+
+             var maticPlasmaClient = MaticHelper.getMaticPlasmaConnection(web3provider)
+
+             var result = await maticPlasmaClient.startWithdraw(
+                  tokenAddress,  // Token address,
+                  rawAmount,  // Token amount for approval (in wei)
+                  {from: userAddress} // transaction fields
+                )
+
+            var txHash = result.transactionHash;
+
+            this.burnTXHash = txhash;
+
+          }
+
+
+
+
+
 
       }else{
         this.networkProviderIdError = "Please switch your Web3 Provider to Matic Mainnet (chain id 137) to call this method."
@@ -522,21 +551,34 @@ export default {
         var web3provider = new Web3(Web3.givenProvider || 'ws://localhost:8546');
         var userAddress = this.acctAddress;
 
-        var maticClient = MaticHelper.getMaticPOSClient(web3provider,userAddress);
 
-        var result = await maticClient.exitERC20(this.burnTXHash,{
-            fastProof: true,
-            from: userAddress,
-            gasPrice: 500000000000
-          })
+        var bridgeType = CryptoAssets.assets[this.assetName]['Bridge'];
 
-        this.loading=false;
-        console.log(result.transactionHash)
+        var options =   {fastProof: true,
+          from: userAddress,
+          gasPrice: 500000000000}
+
+          if(bridgeType == 'pos'){
 
 
-        this.burnTXHash = null;
+                var maticClient = MaticHelper.getMaticPOSClient(web3provider,userAddress);
 
+                var result = await maticClient.exitERC20(this.burnTXHash,options)
 
+                this.loading=false;
+                console.log(result.transactionHash)
+                this.burnTXHash = null;
+              }else{
+                var maticPlasmaClient = MaticHelper.getMaticPlasmaClient(web3provider)
+
+                var result = await maticPlasmaClient.withdraw(this.burnTXHash,options)
+
+                this.loading=false;
+                console.log(result.transactionHash)
+                this.burnTXHash = null;
+
+              }
+ 
 
       }else{
         this.networkProviderIdError = "Please switch your Web3 Provider to Ethereum Mainnet to call this method."

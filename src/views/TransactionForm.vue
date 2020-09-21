@@ -296,7 +296,7 @@ export default {
           });
 
         }else{
-          this.networkProviderIdError = "Please switch your Web3 Provider to Ethereum Mainnet to call this method."
+          this.networkProviderIdError = "Please switch your Web3 Provider to Matic Mainnet to call this method."
         }
       }
     },
@@ -368,7 +368,7 @@ export default {
 
 
         }else{
-          this.networkProviderIdError = "Please switch your Web3 Provider to Ethereum Mainnet to call this method."
+          this.networkProviderIdError = "Please switch your Web3 Provider to Matic Mainnet to call this method."
         }
       }
     },

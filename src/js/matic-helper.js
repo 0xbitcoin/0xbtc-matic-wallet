@@ -1,13 +1,67 @@
 
-
+  const MaticPlasmaClient = require("@maticnetwork/maticjs");
   const MaticPOSClient = require("@maticnetwork/maticjs").MaticPOSClient;
   const config =require("./config-0xbtc")
   var Web3 = require('web3');
 
+//  var maticPlasmaClient;
+  //var maticPlasmaConnection;
+
 var helper = {
 
+  initPlasmaClient(web3)
+  {
+    /*var web3Provider = new Web3.providers.HttpProvider(web3.givenProvider);//metamask
+
+    console.log('init plasma client ', web3)
+    // Create sdk instance
+    maticPlasmaClient = new MaticPlasmaClient({
+      network: 'mainnet', // set network name
+      version: 'v1', // set network version
+
+      // Set Matic provider - string or provider instance
+      // Example: <network.Matic.RPC> OR new Web3.providers.HttpProvide(<network.Matic.RPC>)
+      // Some flows like startExitFor[Metadata]MintableBurntToken, require a webSocket provider such as new web3 providers.WebsocketProvider('ws://localhost:8546')
+      maticProvider: config.child.RPC,
+
+      // Set Mainchain provider - string or provider instance
+      // Example: 'https://ropsten.infura.io' OR new Web3.providers.HttpProvider('http://localhost:8545')
+      parentProvider:  web3Provider,
+      // set default options e.g { from }
+      parentDefaultOptions: {   },
+      // set default options
+      maticDefaultOptions: {   },
+    })
+
+      // init matic
+
+      maticPlasmaClient.initialize()
+
+      maticPlasmaConnection = new MaticPlasmaClient({
+        network: 'mainnet', // set network name
+        version: 'v1', // set network version
+
+        // Set Matic provider - string or provider instance
+        // Example: <network.Matic.RPC> OR new Web3.providers.HttpProvide(<network.Matic.RPC>)
+        // Some flows like startExitFor[Metadata]MintableBurntToken, require a webSocket provider such as new web3 providers.WebsocketProvider('ws://localhost:8546')
+        maticProvider: web3Provider ,
+
+        // Set Mainchain provider - string or provider instance
+        // Example: 'https://ropsten.infura.io' OR new Web3.providers.HttpProvider('http://localhost:8545')
+        parentProvider:  config.root.RPC,
+        // set default options e.g { from }
+        parentDefaultOptions: {   },
+        // set default options
+        maticDefaultOptions: {   },
+      })
+
+        // init matic
+
+        maticPlasmaConnection.initialize()*/
+  },
+
   //readonly
-   getMaticPOSClient (ethProvider,userAddress) {
+   getMaticPOSClient (ethProvider,userAddress) {   //metamask set to eth mainnet
     return new MaticPOSClient({
       network: "mainnet", // For testnet change this to testnet
       version: "v1", // For testnet change this to mumbai
@@ -17,7 +71,7 @@ var helper = {
       maticDefaultOptions: { from: userAddress }, // optional, can also be sent as last param while sending tx
     });
   },
-  getMaticPOSConnection(maticProvider,userAddress) {
+  getMaticPOSConnection(maticProvider,userAddress) { //metamask set to matic mainnet
    return new MaticPOSClient({
      network: "mainnet", // For testnet change this to testnet
      version: "v1", // For testnet change this to mumbai
@@ -26,6 +80,58 @@ var helper = {
      parentDefaultOptions: { from: userAddress }, // optional, can also be sent as last param while sending tx
      maticDefaultOptions: { from: userAddress }, // optional, can also be sent as last param while sending tx
    });
+ },
+ getMaticPlasmaClient(web3Provider){//metamask set to eth mainnet
+
+
+       var maticPlasmaClient = new MaticPlasmaClient({
+       network: 'mainnet', // set network name
+       version: 'v1', // set network version
+
+       // Set Matic provider - string or provider instance
+       // Example: <network.Matic.RPC> OR new Web3.providers.HttpProvide(<network.Matic.RPC>)
+       // Some flows like startExitFor[Metadata]MintableBurntToken, require a webSocket provider such as new web3 providers.WebsocketProvider('ws://localhost:8546')
+       maticProvider: config.child.RPC,
+
+       // Set Mainchain provider - string or provider instance
+       // Example: 'https://ropsten.infura.io' OR new Web3.providers.HttpProvider('http://localhost:8545')
+       parentProvider:  web3Provider,
+       // set default options e.g { from }
+       parentDefaultOptions: {   },
+       // set default options
+       maticDefaultOptions: {   },
+     })
+
+       // init matic
+
+       maticPlasmaClient.initialize()
+
+   return maticPlasmaClient;
+ },
+ getMaticPlasmaConnection(web3Provider)//metamask set to matic mainnet
+ {
+
+   var maticPlasmaConnection = new MaticPlasmaClient({
+     network: 'mainnet', // set network name
+     version: 'v1', // set network version
+
+     // Set Matic provider - string or provider instance
+     // Example: <network.Matic.RPC> OR new Web3.providers.HttpProvide(<network.Matic.RPC>)
+     // Some flows like startExitFor[Metadata]MintableBurntToken, require a webSocket provider such as new web3 providers.WebsocketProvider('ws://localhost:8546')
+     maticProvider: web3Provider ,
+
+     // Set Mainchain provider - string or provider instance
+     // Example: 'https://ropsten.infura.io' OR new Web3.providers.HttpProvider('http://localhost:8545')
+     parentProvider:  config.root.RPC,
+     // set default options e.g { from }
+     parentDefaultOptions: {   },
+     // set default options
+     maticDefaultOptions: {   },
+   })
+
+   maticPlasmaConnection.initialize()
+
+   return maticPlasmaConnection;
  }
 
 }

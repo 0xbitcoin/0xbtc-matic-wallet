@@ -72,10 +72,10 @@ var helper = {
     return tokenContract;
   },
 
-  async hasEnoughAllowance(acctAddress,assetName,swapAmountFormatted)
+  async hasEnoughAllowance(acctAddress,spenderAddress,assetName,swapAmountFormatted)
   {
 
-        var numApproved = await this.getTokensAllowance(CryptoAssets.assets[assetName]['EthereumContract'], CryptoAssets.assets[assetName]['EthereumPredicateContract'],acctAddress )
+        var numApproved = await this.getTokensAllowance(CryptoAssets.assets[assetName]['EthereumContract'], spenderAddress,acctAddress )
 
 
 

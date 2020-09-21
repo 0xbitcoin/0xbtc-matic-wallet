@@ -135,6 +135,9 @@ export default {
     this.updateAll();
     setTimeout(this.updateFormMode, 2000);
     setTimeout(this.updateBalance, 2000);
+
+    //await window.ethereum;
+    MaticHelper.initPlasmaClient(window.ethereum)
   },
   updated()
   {
@@ -211,7 +214,17 @@ export default {
         }
 
 
-        var hasAllowance = await Web3Helper.hasEnoughAllowance(this.acctAddress,this.assetName,this.swapAmount);
+
+         var bridgeType = CryptoAssets.assets[this.assetName]['Bridge'];
+
+         var hasAllowance = false;
+
+
+           var spenderAddress =  CryptoAssets.assets[this.assetName]['EthereumPredicateContract']
+
+           hasAllowance = await Web3Helper.hasEnoughAllowance(this.acctAddress,spenderAddress,this.assetName,this.swapAmount);
+
+
 
           if(hasAllowance)
           {
@@ -370,18 +383,38 @@ export default {
         var Web3 = require('web3');
         var web3provider = new Web3(Web3.givenProvider || 'ws://localhost:8546');
         var userAddress = this.acctAddress;
+        var tokenAddress = CryptoAssets.assets[this.assetName]['EthereumContract'];
 
-        var maticClient = MaticHelper.getMaticPOSClient(web3provider,userAddress);
+        var bridgeType = CryptoAssets.assets[this.assetName]['Bridge'];
 
-        var result = await maticClient.approveERC20ForDeposit(
-          CryptoAssets.assets[this.assetName]['EthereumContract'],
-          Web3Helper.formattedAmountToRaw(this.swapAmount, CryptoAssets.assets[this.assetName]['Decimals']),
-          {from: userAddress}
-        )
+          if(bridgeType == 'pos'){
+            var maticClient = MaticHelper.getMaticPOSClient(web3provider,userAddress);
+
+            var result = await maticClient.approveERC20ForDeposit(
+              tokenAddress,
+              Web3Helper.formattedAmountToRaw(this.swapAmount, CryptoAssets.assets[this.assetName]['Decimals']),
+              {from: userAddress}
+            )
+
+          }else{
+
+           var maticPlasmaClient = MaticHelper.getMaticPlasmaClient(web3provider)
+
+           var result = await maticPlasmaClient.approveERC20TokensForDeposit(
+                tokenAddress,  // Token address,
+                Web3Helper.formattedAmountToRaw(this.swapAmount, CryptoAssets.assets[this.assetName]['Decimals']),  // Token amount for approval (in wei)
+                {from: userAddress} // transaction fields
+              )
+
+
+          }
+
       }else{
         this.networkProviderIdError = "Please switch your Web3 Provider to Ethereum Mainnet to call this method."
 
       }
+
+
 
 
 
@@ -429,23 +462,39 @@ export default {
           var Web3 = require('web3');
           var web3provider = new Web3(Web3.givenProvider || 'ws://localhost:8546');
           var userAddress = this.acctAddress;
-
-          var maticClient = MaticHelper.getMaticPOSClient(web3provider,userAddress);
-
-
-
-          //console.log('meep',Web3Helper.formattedAmountToRaw(this.swapAmount, CryptoAssets.assets[this.assetName]['Decimals']))
-
+          var tokenAddress =CryptoAssets.assets[this.assetName]['EthereumContract'];
           var rawAmount = Web3Helper.formattedAmountToRaw(this.swapAmount, CryptoAssets.assets[this.assetName]['Decimals']);
+          console.log('swapin', userAddress, rawAmount ,  CryptoAssets.assets[this.assetName]['EthereumContract'])
 
-            console.log('swapin', userAddress, rawAmount ,  CryptoAssets.assets[this.assetName]['EthereumContract'])
 
-          var result = await maticClient.depositERC20ForUser(
-            CryptoAssets.assets[this.assetName]['EthereumContract'],
-            userAddress,
-            rawAmount,
-           {from: userAddress}
-          )
+          var bridgeType = CryptoAssets.assets[this.assetName]['Bridge'];
+
+
+
+            if(bridgeType == 'pos'){
+
+                var maticClient = MaticHelper.getMaticPOSClient(web3provider,userAddress);
+
+                //console.log('meep',Web3Helper.formattedAmountToRaw(this.swapAmount, CryptoAssets.assets[this.assetName]['Decimals']))
+
+
+                var result = await maticClient.depositERC20ForUser(
+                  tokenAddress,
+                  userAddress,
+                  rawAmount,
+                 {from: userAddress}
+                )
+
+              }else {
+                var maticPlasmaClient = MaticHelper.getMaticPlasmaClient(web3provider)
+
+                var result = await maticPlasmaClient.depositERC20ForUser(
+                     tokenAddress,  // Token address,
+                     userAddress,
+                     rawAmount,  // Token amount for approval (in wei)
+                     {from: userAddress} // transaction fields
+                   )
+              }
 
           // get burn tx hash
         }else{

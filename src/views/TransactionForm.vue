@@ -299,6 +299,9 @@ export default {
 
 
 
+       console.log('xferring amt',amt)
+
+
       if(this.activeNetwork == "ethereum"){
         if(this.providerNetworkID == 0x1){
 
@@ -325,12 +328,31 @@ export default {
 
           var contractAddress = CryptoAssets.assets[this.assetName]['MaticContract'];
 
+          var maticValue = 0;
 
-          var tokenContract = await Web3Helper.getTokenContract(web3,contractAddress,userAddress);
-          tokenContract.transfer(this.transferTo,amt).send({from: userAddress})
-          .then(function(receipt){
-              // receipt can also be a new contract instance, when coming from a "contract.deploy({...}).send()"
-          });
+          if(contractAddress == CryptoAssets.assets['Matic']['MaticContract'] )
+          {
+            maticValue = amt;
+
+            web3.eth.sendTransaction({from:userAddress,to:this.transferTo, value:amt  }, function(err, transactionHash) {
+              if (!err)
+                console.log(transactionHash);
+              });
+
+          }else{
+
+            var tokenContract = await Web3Helper.getTokenContract(web3,contractAddress,userAddress);
+            tokenContract.transfer(this.transferTo,amt).send({from: userAddress,value:maticValue})
+            .then(function(receipt){
+                // receipt can also be a new contract instance, when coming from a "contract.deploy({...}).send()"
+            });
+
+          }
+
+
+
+
+
 
         }else{
           this.networkProviderIdError = "Please switch your Web3 Provider to Ethereum Mainnet to call this method."

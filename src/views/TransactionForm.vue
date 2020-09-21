@@ -310,7 +310,7 @@ export default {
           console.log(tokenContract)
           console.log('meep',tokenContract.methods)
 
-          tokenContract.transfer(this.approveTo,amt).send({from: userAddress})
+          tokenContract.transfer(this.transferTo,amt).send({from: userAddress})
           .then(function(receipt){
               // receipt can also be a new contract instance, when coming from a "contract.deploy({...}).send()"
           });
@@ -327,7 +327,7 @@ export default {
 
 
           var tokenContract = await Web3Helper.getTokenContract(web3,contractAddress,userAddress);
-          tokenContract.transfer(this.approveTo,amt).send({from: userAddress})
+          tokenContract.transfer(this.transferTo,amt).send({from: userAddress})
           .then(function(receipt){
               // receipt can also be a new contract instance, when coming from a "contract.deploy({...}).send()"
           });

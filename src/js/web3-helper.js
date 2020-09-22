@@ -86,7 +86,7 @@ var helper = {
 
           console.log('num Approved f ', numApprovedFormatted)
 
-      return  ( parseFloat(numApprovedFormatted) > parseFloat(swapAmountFormatted) )
+      return  ( parseFloat(numApprovedFormatted) >= parseFloat(swapAmountFormatted) )
 
 
   },

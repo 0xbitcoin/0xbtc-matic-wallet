@@ -554,9 +554,11 @@ export default {
 
         var bridgeType = CryptoAssets.assets[this.assetName]['Bridge'];
 
-        var options =   {fastProof: true,
+        var options =   {
+          //fastProof: true,
           from: userAddress,
-          gasPrice: 500000000000}
+        //  gasPrice: 500000000000
+        }
 
           if(bridgeType == 'pos'){
 
@@ -578,7 +580,7 @@ export default {
                 this.burnTXHash = null;
 
               }
- 
+
 
       }else{
         this.networkProviderIdError = "Please switch your Web3 Provider to Ethereum Mainnet to call this method."

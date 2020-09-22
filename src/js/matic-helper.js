@@ -9,7 +9,7 @@
 
 var helper = {
 
-  initPlasmaClient(web3)
+  initPlasmaClient()
   {
     /*var web3Provider = new Web3.providers.HttpProvider(web3.givenProvider);//metamask
 

@@ -11,7 +11,7 @@ module.exports = {
       "Decimals": 18,
       "EthereumContract": "0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0",
       "MaticContract": "0x0000000000000000000000000000000000001010",
-      "EthereumPredicateContract": "0x40ec5b33f54e0e8a33a975908c5ba1c14e5bbbdf",
+      "EthereumPredicateContract": "0x401f6c983ea34274ec46f84d70b31c151321188b",
       "Bridge":"plasma"
 
     },
